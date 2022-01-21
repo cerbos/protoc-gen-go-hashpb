@@ -5,6 +5,8 @@ package hashpb_test
 
 import (
 	"crypto/sha256"
+	"fmt"
+	"math/rand"
 	"testing"
 	"time"
 
@@ -15,6 +17,8 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
+
+var sink byte
 
 func TestSum(t *testing.T) {
 	testCases := []struct {
@@ -36,7 +40,7 @@ func TestSum(t *testing.T) {
 		},
 		{
 			name:  "fully populated nested",
-			input: mkNestedTestAllTypesMsg(),
+			input: mkNestedTestAllTypesMsg(3),
 		},
 	}
 
@@ -125,16 +129,17 @@ func TestIgnore(t *testing.T) {
 	}
 }
 
-func mkNestedTestAllTypesMsg() *internal.NestedTestAllTypes {
-	return &internal.NestedTestAllTypes{
-		Child: &internal.NestedTestAllTypes{
-			Child: &internal.NestedTestAllTypes{
-				Payload: mkTestAllTypesMsg(),
-			},
-			Payload: mkTestAllTypesMsg(),
-		},
+func mkNestedTestAllTypesMsg(nesting int) *internal.NestedTestAllTypes {
+	m := &internal.NestedTestAllTypes{
 		Payload: mkTestAllTypesMsg(),
 	}
+
+	if nesting <= 1 {
+		return m
+	}
+
+	m.Child = mkNestedTestAllTypesMsg(nesting - 1)
+	return m
 }
 
 func mkTestAllTypesMsg() *internal.TestAllTypes {
@@ -182,5 +187,26 @@ func mkTestAllTypesMsg() *internal.TestAllTypes {
 		MapInt32String:        map[int32]string{1: "a", 2: "b", 3: "c"},
 		MapBoolString:         map[bool]string{true: "a", false: "b"},
 		MapInt64NestedType:    map[int64]*internal.TestAllTypes_NestedMessage{1: {Bb: 1}},
+	}
+}
+
+func BenchmarkSum64(b *testing.B) {
+	for _, n := range []int{1, 5, 10, 50, 100} {
+		b.Run(fmt.Sprintf("nesting=%d", n), func(b *testing.B) {
+			buf := make([]byte, 8)
+			m := mkNestedTestAllTypesMsg(n)
+			size := proto.Size(m)
+			b.SetBytes(int64(size))
+			b.ReportAllocs()
+			b.ResetTimer()
+
+			for i := 0; i < b.N; i++ {
+				sum, err := hashpb.Sum(buf, m)
+				if err != nil {
+					b.Errorf("Failed to calculate sum: %v", err)
+				}
+				sink = sum[rand.Intn(8)]
+			}
+		})
 	}
 }

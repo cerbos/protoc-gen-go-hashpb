@@ -125,8 +125,7 @@ func (ph *pbHasher) hash(msg protoreflect.Message) error {
 
 	fields := md.Fields()
 	numFields := fields.Len()
-	setFields := make([]protoreflect.FieldNumber, 0, numFields)
-	setDescriptors := make(map[protoreflect.FieldNumber]protoreflect.FieldDescriptor, numFields)
+	setFields := make([]protoreflect.FieldDescriptor, 0, numFields)
 
 	for i := 0; i < numFields; i++ {
 		fd := fields.Get(i)
@@ -135,15 +134,12 @@ func (ph *pbHasher) hash(msg protoreflect.Message) error {
 		}
 
 		if msg.Has(fd) {
-			n := fd.Number()
-			setFields = append(setFields, n)
-			setDescriptors[n] = fd
+			setFields = append(setFields, fd)
 		}
 	}
 
-	sort.Slice(setFields, func(i, j int) bool { return setFields[i] < setFields[j] })
-	for _, fn := range setFields {
-		fd := setDescriptors[fn]
+	sort.Slice(setFields, func(i, j int) bool { return setFields[i].Number() < setFields[j].Number() })
+	for _, fd := range setFields {
 		if err := ph.writeValue(msg, fd); err != nil {
 			return fmt.Errorf("failed to write value of %q: %w", fd.FullName(), err)
 		}
@@ -181,12 +177,14 @@ func (ph *pbHasher) writeMapValue(msg protoreflect.Message, fd protoreflect.Fiel
 
 	entries := make([]kv, 0, mapv.Len())
 	mapv.Range(func(k protoreflect.MapKey, v protoreflect.Value) bool {
+		mapv.Get(k)
 		entries = append(entries, kv{key: k, value: v})
 		return true
 	})
 
+	compareFn := mapKeyCompareFunc(entries[0].key)
 	sort.Slice(entries, func(i, j int) bool {
-		return compareMapKeys(entries[i].key, entries[j].key)
+		return compareFn(entries[i].key, entries[j].key)
 	})
 
 	for _, entry := range entries {
@@ -246,16 +244,16 @@ type kv struct {
 	value protoreflect.Value
 }
 
-func compareMapKeys(a, b protoreflect.MapKey) bool {
-	switch t := a.Interface().(type) {
+func mapKeyCompareFunc(mk protoreflect.MapKey) func(protoreflect.MapKey, protoreflect.MapKey) bool {
+	switch t := mk.Interface().(type) {
 	case bool:
-		return !a.Bool() && b.Bool()
+		return func(a, b protoreflect.MapKey) bool { return !a.Bool() && b.Bool() }
 	case int32, int64:
-		return a.Int() < b.Int()
+		return func(a, b protoreflect.MapKey) bool { return a.Int() < b.Int() }
 	case uint32, uint64:
-		return a.Uint() < b.Uint()
+		return func(a, b protoreflect.MapKey) bool { return a.Uint() < b.Uint() }
 	case string:
-		return a.String() < b.String()
+		return func(a, b protoreflect.MapKey) bool { return a.String() < b.String() }
 	default:
 		panic(fmt.Errorf("unexpected map key type %T", t))
 	}
