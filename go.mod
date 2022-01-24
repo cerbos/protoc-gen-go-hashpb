@@ -1,4 +1,4 @@
-module github.com/cerbos/hashpb
+module github.com/cerbos/protoc-gen-go-hashpb
 
 go 1.17
 

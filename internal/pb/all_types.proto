@@ -4,7 +4,7 @@ syntax = "proto3";
 
 package cerbos.hashpb.test;
 
-option go_package = "github.com/cerbos/hashpb/internal";
+option go_package = "github.com/cerbos/protoc-gen-go-hashpb/internal/pb";
 
 import "google/protobuf/any.proto";
 import "google/protobuf/duration.proto";

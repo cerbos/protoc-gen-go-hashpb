@@ -4,6 +4,7 @@ TOOLS_MOD := tools/go.mod
 
 BUF := $(TOOLS_BIN_DIR)/buf
 PROTOC_GEN_GO := $(TOOLS_BIN_DIR)/protoc-gen-go
+PROTOC_GEN_GO_HASHPB := $(TOOLS_BIN_DIR)/protoc-gen-go-hashpb
 
 
 define BUF_GEN_TEMPLATE
@@ -15,6 +16,12 @@ define BUF_GEN_TEMPLATE
       "opt": "paths=source_relative",\
       "out": ".",\
       "path": "$(PROTOC_GEN_GO)"\
+    },\
+    {\
+      "name": "hashpb",\
+      "opt": "paths=source_relative",\
+      "out": ".",\
+      "path": "$(PROTOC_GEN_GO_HASHPB)"\
     },\
   ]\
 }
@@ -29,5 +36,3 @@ $(BUF): $(TOOLS_BIN_DIR)
 $(PROTOC_GEN_GO): $(TOOLS_BIN_DIR) 
 	@ GOBIN=$(TOOLS_BIN_DIR) go install -modfile=$(TOOLS_MOD) google.golang.org/protobuf/cmd/protoc-gen-go
 
-.PHONY: proto-gen-deps
-proto-gen-deps: $(BUF) $(PROTOC_GEN_GO) 

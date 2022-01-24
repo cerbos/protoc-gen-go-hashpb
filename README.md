@@ -1,28 +1,48 @@
-# hashpb
+# protoc-gen-go-hashpb
 
-Library for hashing protobuf messages.
+A protobuf plugin to generate hash functions for messages.
 
 Hashing messages encoded using Protocol Buffers is tricky because there is [no guarantee that the serialized form is stable](https://developers.google.com/protocol-buffers/docs/encoding) between different implementations, architectures, or even library versions. 
-This library attempts to get around this by implementing a serializer that encodes a protobuf message using a canonical traversal order. The encoded values are fed directly into a hash function to produce a single hash value at the end. 
+This plugin generates a hash function that does a depth-first traversal of the populated values (including default values) of the message in field number order and feeds it to the provided `hash.Hash` implementation. Map values are accessed in key order as well. Because of this deterministic traversal order, the hash generated for two identical protobuf messages should be the same.
 
-NOTE: This library is still under development and does not provide any guarantees about cross-arch or cross-implementation stability. Use at your own risk. 
+NOTE: While we have tested this plugin quite extensively, some edge cases may remain. Use at your own risk.
+
+## Install
+
+```shell
+go install github.com/cerbos/protoc-gen-go-hashpb@latest
+```
 
 ## Usage
 
-Calculate a 64-bit hash using xxhash (the default)
+### Generate code
 
-```go
-h, err := hashpb.Sum64(myProtoMsg)
+With `protoc`:
+
+```shell
+protoc --plugin protoc-gen-go-hashpb=${GOBIN}/protoc-gen-go-hashpb --go_out=. --go-hashpb_out=. *.proto 
 ```
 
-Calculate the SHA256
+With [`buf`](https://github.com/bufbuild/buf): 
 
-```go
-digest, err := hashpb.Sum(nil, myProtoMsg, hashpb.WithHasher(sha256.New()))
+```shell
+buf generate --template='{"version":"v1","plugins":[{"name":"go","out":"."},{"name":"go-hashpb","out":"."}]}'
 ```
 
-Ignore some fields when calculating the hash
+### Calculate hashes using generated code
 
 ```go
-h, err := hashpb.Sum64(myProtoMsg, hashpb.WithIgnoreFields("fully.qualified.Message.field_name1", "fully.qualified.Message.field_name2"))
+func hashMyProto(m *mypb.MyMsg) uint64 {
+    digest := xxhash.New() // any hash.Hash implementation would work
+    m.HashPB(digest, nil)
+    return digest.Sum64()
+}
+```
+
+You can exclude certain fields from being included in the hash. The field name must be fully qualified.
+
+```go
+ignore := map[string]struct{}{"fully.qualified.package.Message.field_name1": {}, "fully.qualified.package.Message.field_name2":{}}
+digest := xxhash.New() // any hash.Hash implementation would work
+m.HashPB(digest, ignore)
 ```
