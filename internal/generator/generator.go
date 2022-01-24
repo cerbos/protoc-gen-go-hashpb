@@ -149,9 +149,14 @@ func (g *codegen) genHelperForMsg(gf *protogen.GeneratedFile, msg *protogen.Mess
 
 	gf.P("func ", sumFuncName(msg.Desc), "(", receiverIdent, " *", msg.GoIdent, ",hasher ", hashFn, ", ignore map[string]struct{}) {")
 
+	oneOfs := make(map[string]struct{})
+
 	for _, field := range fields {
 		if field.Oneof != nil {
-			g.genOneOfField(gf, field)
+			if _, ok := oneOfs[field.Oneof.GoName]; !ok {
+				g.genOneOfField(gf, field)
+				oneOfs[field.Oneof.GoName] = struct{}{}
+			}
 		} else {
 			g.genField(gf, field)
 		}
