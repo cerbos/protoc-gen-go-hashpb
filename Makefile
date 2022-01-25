@@ -15,3 +15,7 @@ test: generate
 .PHONY: benchmark
 benchmark: generate
 	@ go test -v -run=ignore -count=10 -bench=. ./...
+
+.PHONY: build
+build: $(GORELEASER) test
+	@ $(GORELEASER) release --config=.goreleaser.yml --snapshot --skip-publish --rm-dist
