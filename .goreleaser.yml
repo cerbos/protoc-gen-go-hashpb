@@ -25,7 +25,7 @@ builds:
       - -s -w -X github.com/cerbos/protoc-gen-go-hashpb/internal/generator.Version={{.Version}}
 dockers:
   - image_templates:
-      - "plugins.buf.build/cerbos/protoc-gen-go-hashpb:{{ .Version }}"
+      - "plugins.buf.build/cerbos/protoc-gen-go-hashpb:v{{ .Version }}"
     goos: linux
     goarch: amd64
     build_flag_templates:
