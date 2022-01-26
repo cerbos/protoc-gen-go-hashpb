@@ -9,6 +9,12 @@ NOTE: While we have tested this plugin quite extensively, some edge cases may re
 
 ## Install
 
+Download the latest binary for your environment from https://github.com/cerbos/protoc-gen-go-hashpb/releases.
+
+This plugin is also available from the Buf Schema Registry as `buf.build/cerbos/protoc-gen-go-hashpb` and can be used as a [remote plugin](https://docs.buf.build/bsr/remote-generation/remote-plugin-execution).
+
+Alternatively, install from source:
+
 ```shell
 go install github.com/cerbos/protoc-gen-go-hashpb@latest
 ```
@@ -28,6 +34,7 @@ With [`buf`](https://github.com/bufbuild/buf):
 ```shell
 buf generate --template='{"version":"v1","plugins":[{"name":"go","out":"."},{"name":"go-hashpb","out":"."}]}'
 ```
+
 
 ### Calculate hashes using generated code
 
