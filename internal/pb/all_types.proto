@@ -106,3 +106,9 @@ enum GlobalEnum {
   GAR = 1;
   GAZ = 2;
 }
+
+message NoFields {
+    message NestedMsg {
+        map<string,NestedTestAllTypes> nested_messages = 1;
+    }
+}

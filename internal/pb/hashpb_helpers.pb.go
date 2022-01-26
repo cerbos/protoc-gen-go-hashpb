@@ -30,6 +30,9 @@ func cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m *NestedTestAllTypes, has
 	}
 }
 
+func cerbos_hashpb_test_NoFields_hashpb_sum(m *NoFields, hasher hash.Hash, ignore map[string]struct{}) {
+}
+
 func cerbos_hashpb_test_TestAllTypes_NestedMessage_hashpb_sum(m *TestAllTypes_NestedMessage, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.NestedMessage.bb"]; !ok {
 		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Bb)))

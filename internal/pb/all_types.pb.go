@@ -709,6 +709,44 @@ func (x *NestedTestAllTypes) GetPayload() *TestAllTypes {
 	return nil
 }
 
+type NoFields struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+}
+
+func (x *NoFields) Reset() {
+	*x = NoFields{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_pb_all_types_proto_msgTypes[2]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NoFields) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NoFields) ProtoMessage() {}
+
+func (x *NoFields) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_pb_all_types_proto_msgTypes[2]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NoFields.ProtoReflect.Descriptor instead.
+func (*NoFields) Descriptor() ([]byte, []int) {
+	return file_internal_pb_all_types_proto_rawDescGZIP(), []int{2}
+}
+
 type TestAllTypes_NestedMessage struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -720,7 +758,7 @@ type TestAllTypes_NestedMessage struct {
 func (x *TestAllTypes_NestedMessage) Reset() {
 	*x = TestAllTypes_NestedMessage{}
 	if protoimpl.UnsafeEnabled {
-		mi := &file_internal_pb_all_types_proto_msgTypes[2]
+		mi := &file_internal_pb_all_types_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		ms.StoreMessageInfo(mi)
 	}
@@ -733,7 +771,7 @@ func (x *TestAllTypes_NestedMessage) String() string {
 func (*TestAllTypes_NestedMessage) ProtoMessage() {}
 
 func (x *TestAllTypes_NestedMessage) ProtoReflect() protoreflect.Message {
-	mi := &file_internal_pb_all_types_proto_msgTypes[2]
+	mi := &file_internal_pb_all_types_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -754,6 +792,53 @@ func (x *TestAllTypes_NestedMessage) GetBb() int32 {
 		return x.Bb
 	}
 	return 0
+}
+
+type NoFields_NestedMsg struct {
+	state         protoimpl.MessageState
+	sizeCache     protoimpl.SizeCache
+	unknownFields protoimpl.UnknownFields
+
+	NestedMessages map[string]*NestedTestAllTypes `protobuf:"bytes,1,rep,name=nested_messages,json=nestedMessages,proto3" json:"nested_messages,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+}
+
+func (x *NoFields_NestedMsg) Reset() {
+	*x = NoFields_NestedMsg{}
+	if protoimpl.UnsafeEnabled {
+		mi := &file_internal_pb_all_types_proto_msgTypes[9]
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		ms.StoreMessageInfo(mi)
+	}
+}
+
+func (x *NoFields_NestedMsg) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*NoFields_NestedMsg) ProtoMessage() {}
+
+func (x *NoFields_NestedMsg) ProtoReflect() protoreflect.Message {
+	mi := &file_internal_pb_all_types_proto_msgTypes[9]
+	if protoimpl.UnsafeEnabled && x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use NoFields_NestedMsg.ProtoReflect.Descriptor instead.
+func (*NoFields_NestedMsg) Descriptor() ([]byte, []int) {
+	return file_internal_pb_all_types_proto_rawDescGZIP(), []int{2, 0}
+}
+
+func (x *NoFields_NestedMsg) GetNestedMessages() map[string]*NestedTestAllTypes {
+	if x != nil {
+		return x.NestedMessages
+	}
+	return nil
 }
 
 var File_internal_pb_all_types_proto protoreflect.FileDescriptor
@@ -1022,14 +1107,28 @@ var file_internal_pb_all_types_proto_rawDesc = []byte{
 	0x6c, 0x64, 0x12, 0x3a, 0x0a, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x18, 0x02, 0x20,
 	0x01, 0x28, 0x0b, 0x32, 0x20, 0x2e, 0x63, 0x65, 0x72, 0x62, 0x6f, 0x73, 0x2e, 0x68, 0x61, 0x73,
 	0x68, 0x70, 0x62, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c,
-	0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x2a, 0x27,
-	0x0a, 0x0a, 0x47, 0x6c, 0x6f, 0x62, 0x61, 0x6c, 0x45, 0x6e, 0x75, 0x6d, 0x12, 0x07, 0x0a, 0x03,
-	0x47, 0x4f, 0x4f, 0x10, 0x00, 0x12, 0x07, 0x0a, 0x03, 0x47, 0x41, 0x52, 0x10, 0x01, 0x12, 0x07,
-	0x0a, 0x03, 0x47, 0x41, 0x5a, 0x10, 0x02, 0x42, 0x34, 0x5a, 0x32, 0x67, 0x69, 0x74, 0x68, 0x75,
-	0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x63, 0x65, 0x72, 0x62, 0x6f, 0x73, 0x2f, 0x70, 0x72, 0x6f,
-	0x74, 0x6f, 0x63, 0x2d, 0x67, 0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2d, 0x68, 0x61, 0x73, 0x68, 0x70,
-	0x62, 0x2f, 0x69, 0x6e, 0x74, 0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70,
-	0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x07, 0x70, 0x61, 0x79, 0x6c, 0x6f, 0x61, 0x64, 0x22, 0xe8,
+	0x01, 0x0a, 0x08, 0x4e, 0x6f, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73, 0x1a, 0xdb, 0x01, 0x0a, 0x09,
+	0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x73, 0x67, 0x12, 0x63, 0x0a, 0x0f, 0x6e, 0x65, 0x73,
+	0x74, 0x65, 0x64, 0x5f, 0x6d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03,
+	0x28, 0x0b, 0x32, 0x3a, 0x2e, 0x63, 0x65, 0x72, 0x62, 0x6f, 0x73, 0x2e, 0x68, 0x61, 0x73, 0x68,
+	0x70, 0x62, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x4e, 0x6f, 0x46, 0x69, 0x65, 0x6c, 0x64, 0x73,
+	0x2e, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x73, 0x67, 0x2e, 0x4e, 0x65, 0x73, 0x74, 0x65,
+	0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x45, 0x6e, 0x74, 0x72, 0x79, 0x52, 0x0e,
+	0x6e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73, 0x1a, 0x69,
+	0x0a, 0x13, 0x4e, 0x65, 0x73, 0x74, 0x65, 0x64, 0x4d, 0x65, 0x73, 0x73, 0x61, 0x67, 0x65, 0x73,
+	0x45, 0x6e, 0x74, 0x72, 0x79, 0x12, 0x10, 0x0a, 0x03, 0x6b, 0x65, 0x79, 0x18, 0x01, 0x20, 0x01,
+	0x28, 0x09, 0x52, 0x03, 0x6b, 0x65, 0x79, 0x12, 0x3c, 0x0a, 0x05, 0x76, 0x61, 0x6c, 0x75, 0x65,
+	0x18, 0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x26, 0x2e, 0x63, 0x65, 0x72, 0x62, 0x6f, 0x73, 0x2e,
+	0x68, 0x61, 0x73, 0x68, 0x70, 0x62, 0x2e, 0x74, 0x65, 0x73, 0x74, 0x2e, 0x4e, 0x65, 0x73, 0x74,
+	0x65, 0x64, 0x54, 0x65, 0x73, 0x74, 0x41, 0x6c, 0x6c, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x05,
+	0x76, 0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x2a, 0x27, 0x0a, 0x0a, 0x47, 0x6c, 0x6f,
+	0x62, 0x61, 0x6c, 0x45, 0x6e, 0x75, 0x6d, 0x12, 0x07, 0x0a, 0x03, 0x47, 0x4f, 0x4f, 0x10, 0x00,
+	0x12, 0x07, 0x0a, 0x03, 0x47, 0x41, 0x52, 0x10, 0x01, 0x12, 0x07, 0x0a, 0x03, 0x47, 0x41, 0x5a,
+	0x10, 0x02, 0x42, 0x34, 0x5a, 0x32, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d,
+	0x2f, 0x63, 0x65, 0x72, 0x62, 0x6f, 0x73, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x63, 0x2d, 0x67,
+	0x65, 0x6e, 0x2d, 0x67, 0x6f, 0x2d, 0x68, 0x61, 0x73, 0x68, 0x70, 0x62, 0x2f, 0x69, 0x6e, 0x74,
+	0x65, 0x72, 0x6e, 0x61, 0x6c, 0x2f, 0x70, 0x62, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -1045,67 +1144,72 @@ func file_internal_pb_all_types_proto_rawDescGZIP() []byte {
 }
 
 var file_internal_pb_all_types_proto_enumTypes = make([]protoimpl.EnumInfo, 2)
-var file_internal_pb_all_types_proto_msgTypes = make([]protoimpl.MessageInfo, 8)
+var file_internal_pb_all_types_proto_msgTypes = make([]protoimpl.MessageInfo, 11)
 var file_internal_pb_all_types_proto_goTypes = []interface{}{
 	(GlobalEnum)(0),                    // 0: cerbos.hashpb.test.GlobalEnum
 	(TestAllTypes_NestedEnum)(0),       // 1: cerbos.hashpb.test.TestAllTypes.NestedEnum
 	(*TestAllTypes)(nil),               // 2: cerbos.hashpb.test.TestAllTypes
 	(*NestedTestAllTypes)(nil),         // 3: cerbos.hashpb.test.NestedTestAllTypes
-	(*TestAllTypes_NestedMessage)(nil), // 4: cerbos.hashpb.test.TestAllTypes.NestedMessage
-	nil,                                // 5: cerbos.hashpb.test.TestAllTypes.MapStringStringEntry
-	nil,                                // 6: cerbos.hashpb.test.TestAllTypes.MapUint64StringEntry
-	nil,                                // 7: cerbos.hashpb.test.TestAllTypes.MapInt32StringEntry
-	nil,                                // 8: cerbos.hashpb.test.TestAllTypes.MapBoolStringEntry
-	nil,                                // 9: cerbos.hashpb.test.TestAllTypes.MapInt64NestedTypeEntry
-	(*anypb.Any)(nil),                  // 10: google.protobuf.Any
-	(*durationpb.Duration)(nil),        // 11: google.protobuf.Duration
-	(*timestamppb.Timestamp)(nil),      // 12: google.protobuf.Timestamp
-	(*structpb.Struct)(nil),            // 13: google.protobuf.Struct
-	(*structpb.Value)(nil),             // 14: google.protobuf.Value
-	(*wrapperspb.Int64Value)(nil),      // 15: google.protobuf.Int64Value
-	(*wrapperspb.Int32Value)(nil),      // 16: google.protobuf.Int32Value
-	(*wrapperspb.DoubleValue)(nil),     // 17: google.protobuf.DoubleValue
-	(*wrapperspb.FloatValue)(nil),      // 18: google.protobuf.FloatValue
-	(*wrapperspb.UInt64Value)(nil),     // 19: google.protobuf.UInt64Value
-	(*wrapperspb.UInt32Value)(nil),     // 20: google.protobuf.UInt32Value
-	(*wrapperspb.StringValue)(nil),     // 21: google.protobuf.StringValue
-	(*wrapperspb.BoolValue)(nil),       // 22: google.protobuf.BoolValue
-	(*wrapperspb.BytesValue)(nil),      // 23: google.protobuf.BytesValue
+	(*NoFields)(nil),                   // 4: cerbos.hashpb.test.NoFields
+	(*TestAllTypes_NestedMessage)(nil), // 5: cerbos.hashpb.test.TestAllTypes.NestedMessage
+	nil,                                // 6: cerbos.hashpb.test.TestAllTypes.MapStringStringEntry
+	nil,                                // 7: cerbos.hashpb.test.TestAllTypes.MapUint64StringEntry
+	nil,                                // 8: cerbos.hashpb.test.TestAllTypes.MapInt32StringEntry
+	nil,                                // 9: cerbos.hashpb.test.TestAllTypes.MapBoolStringEntry
+	nil,                                // 10: cerbos.hashpb.test.TestAllTypes.MapInt64NestedTypeEntry
+	(*NoFields_NestedMsg)(nil),         // 11: cerbos.hashpb.test.NoFields.NestedMsg
+	nil,                                // 12: cerbos.hashpb.test.NoFields.NestedMsg.NestedMessagesEntry
+	(*anypb.Any)(nil),                  // 13: google.protobuf.Any
+	(*durationpb.Duration)(nil),        // 14: google.protobuf.Duration
+	(*timestamppb.Timestamp)(nil),      // 15: google.protobuf.Timestamp
+	(*structpb.Struct)(nil),            // 16: google.protobuf.Struct
+	(*structpb.Value)(nil),             // 17: google.protobuf.Value
+	(*wrapperspb.Int64Value)(nil),      // 18: google.protobuf.Int64Value
+	(*wrapperspb.Int32Value)(nil),      // 19: google.protobuf.Int32Value
+	(*wrapperspb.DoubleValue)(nil),     // 20: google.protobuf.DoubleValue
+	(*wrapperspb.FloatValue)(nil),      // 21: google.protobuf.FloatValue
+	(*wrapperspb.UInt64Value)(nil),     // 22: google.protobuf.UInt64Value
+	(*wrapperspb.UInt32Value)(nil),     // 23: google.protobuf.UInt32Value
+	(*wrapperspb.StringValue)(nil),     // 24: google.protobuf.StringValue
+	(*wrapperspb.BoolValue)(nil),       // 25: google.protobuf.BoolValue
+	(*wrapperspb.BytesValue)(nil),      // 26: google.protobuf.BytesValue
 }
 var file_internal_pb_all_types_proto_depIdxs = []int32{
 	1,  // 0: cerbos.hashpb.test.TestAllTypes.standalone_enum:type_name -> cerbos.hashpb.test.TestAllTypes.NestedEnum
-	10, // 1: cerbos.hashpb.test.TestAllTypes.single_any:type_name -> google.protobuf.Any
-	11, // 2: cerbos.hashpb.test.TestAllTypes.single_duration:type_name -> google.protobuf.Duration
-	12, // 3: cerbos.hashpb.test.TestAllTypes.single_timestamp:type_name -> google.protobuf.Timestamp
-	13, // 4: cerbos.hashpb.test.TestAllTypes.single_struct:type_name -> google.protobuf.Struct
-	14, // 5: cerbos.hashpb.test.TestAllTypes.single_value:type_name -> google.protobuf.Value
-	15, // 6: cerbos.hashpb.test.TestAllTypes.single_int64_wrapper:type_name -> google.protobuf.Int64Value
-	16, // 7: cerbos.hashpb.test.TestAllTypes.single_int32_wrapper:type_name -> google.protobuf.Int32Value
-	17, // 8: cerbos.hashpb.test.TestAllTypes.single_double_wrapper:type_name -> google.protobuf.DoubleValue
-	18, // 9: cerbos.hashpb.test.TestAllTypes.single_float_wrapper:type_name -> google.protobuf.FloatValue
-	19, // 10: cerbos.hashpb.test.TestAllTypes.single_uint64_wrapper:type_name -> google.protobuf.UInt64Value
-	20, // 11: cerbos.hashpb.test.TestAllTypes.single_uint32_wrapper:type_name -> google.protobuf.UInt32Value
-	21, // 12: cerbos.hashpb.test.TestAllTypes.single_string_wrapper:type_name -> google.protobuf.StringValue
-	22, // 13: cerbos.hashpb.test.TestAllTypes.single_bool_wrapper:type_name -> google.protobuf.BoolValue
-	23, // 14: cerbos.hashpb.test.TestAllTypes.single_bytes_wrapper:type_name -> google.protobuf.BytesValue
-	4,  // 15: cerbos.hashpb.test.TestAllTypes.single_nested_message:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
+	13, // 1: cerbos.hashpb.test.TestAllTypes.single_any:type_name -> google.protobuf.Any
+	14, // 2: cerbos.hashpb.test.TestAllTypes.single_duration:type_name -> google.protobuf.Duration
+	15, // 3: cerbos.hashpb.test.TestAllTypes.single_timestamp:type_name -> google.protobuf.Timestamp
+	16, // 4: cerbos.hashpb.test.TestAllTypes.single_struct:type_name -> google.protobuf.Struct
+	17, // 5: cerbos.hashpb.test.TestAllTypes.single_value:type_name -> google.protobuf.Value
+	18, // 6: cerbos.hashpb.test.TestAllTypes.single_int64_wrapper:type_name -> google.protobuf.Int64Value
+	19, // 7: cerbos.hashpb.test.TestAllTypes.single_int32_wrapper:type_name -> google.protobuf.Int32Value
+	20, // 8: cerbos.hashpb.test.TestAllTypes.single_double_wrapper:type_name -> google.protobuf.DoubleValue
+	21, // 9: cerbos.hashpb.test.TestAllTypes.single_float_wrapper:type_name -> google.protobuf.FloatValue
+	22, // 10: cerbos.hashpb.test.TestAllTypes.single_uint64_wrapper:type_name -> google.protobuf.UInt64Value
+	23, // 11: cerbos.hashpb.test.TestAllTypes.single_uint32_wrapper:type_name -> google.protobuf.UInt32Value
+	24, // 12: cerbos.hashpb.test.TestAllTypes.single_string_wrapper:type_name -> google.protobuf.StringValue
+	25, // 13: cerbos.hashpb.test.TestAllTypes.single_bool_wrapper:type_name -> google.protobuf.BoolValue
+	26, // 14: cerbos.hashpb.test.TestAllTypes.single_bytes_wrapper:type_name -> google.protobuf.BytesValue
+	5,  // 15: cerbos.hashpb.test.TestAllTypes.single_nested_message:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
 	1,  // 16: cerbos.hashpb.test.TestAllTypes.single_nested_enum:type_name -> cerbos.hashpb.test.TestAllTypes.NestedEnum
-	4,  // 17: cerbos.hashpb.test.TestAllTypes.repeated_nested_message:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
+	5,  // 17: cerbos.hashpb.test.TestAllTypes.repeated_nested_message:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
 	1,  // 18: cerbos.hashpb.test.TestAllTypes.repeated_nested_enum:type_name -> cerbos.hashpb.test.TestAllTypes.NestedEnum
-	4,  // 19: cerbos.hashpb.test.TestAllTypes.repeated_lazy_message:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
-	5,  // 20: cerbos.hashpb.test.TestAllTypes.map_string_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapStringStringEntry
-	6,  // 21: cerbos.hashpb.test.TestAllTypes.map_uint64_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapUint64StringEntry
-	7,  // 22: cerbos.hashpb.test.TestAllTypes.map_int32_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapInt32StringEntry
-	8,  // 23: cerbos.hashpb.test.TestAllTypes.map_bool_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapBoolStringEntry
-	9,  // 24: cerbos.hashpb.test.TestAllTypes.map_int64_nested_type:type_name -> cerbos.hashpb.test.TestAllTypes.MapInt64NestedTypeEntry
+	5,  // 19: cerbos.hashpb.test.TestAllTypes.repeated_lazy_message:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
+	6,  // 20: cerbos.hashpb.test.TestAllTypes.map_string_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapStringStringEntry
+	7,  // 21: cerbos.hashpb.test.TestAllTypes.map_uint64_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapUint64StringEntry
+	8,  // 22: cerbos.hashpb.test.TestAllTypes.map_int32_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapInt32StringEntry
+	9,  // 23: cerbos.hashpb.test.TestAllTypes.map_bool_string:type_name -> cerbos.hashpb.test.TestAllTypes.MapBoolStringEntry
+	10, // 24: cerbos.hashpb.test.TestAllTypes.map_int64_nested_type:type_name -> cerbos.hashpb.test.TestAllTypes.MapInt64NestedTypeEntry
 	3,  // 25: cerbos.hashpb.test.NestedTestAllTypes.child:type_name -> cerbos.hashpb.test.NestedTestAllTypes
 	2,  // 26: cerbos.hashpb.test.NestedTestAllTypes.payload:type_name -> cerbos.hashpb.test.TestAllTypes
-	4,  // 27: cerbos.hashpb.test.TestAllTypes.MapInt64NestedTypeEntry.value:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
-	28, // [28:28] is the sub-list for method output_type
-	28, // [28:28] is the sub-list for method input_type
-	28, // [28:28] is the sub-list for extension type_name
-	28, // [28:28] is the sub-list for extension extendee
-	0,  // [0:28] is the sub-list for field type_name
+	5,  // 27: cerbos.hashpb.test.TestAllTypes.MapInt64NestedTypeEntry.value:type_name -> cerbos.hashpb.test.TestAllTypes.NestedMessage
+	12, // 28: cerbos.hashpb.test.NoFields.NestedMsg.nested_messages:type_name -> cerbos.hashpb.test.NoFields.NestedMsg.NestedMessagesEntry
+	3,  // 29: cerbos.hashpb.test.NoFields.NestedMsg.NestedMessagesEntry.value:type_name -> cerbos.hashpb.test.NestedTestAllTypes
+	30, // [30:30] is the sub-list for method output_type
+	30, // [30:30] is the sub-list for method input_type
+	30, // [30:30] is the sub-list for extension type_name
+	30, // [30:30] is the sub-list for extension extendee
+	0,  // [0:30] is the sub-list for field type_name
 }
 
 func init() { file_internal_pb_all_types_proto_init() }
@@ -1139,7 +1243,31 @@ func file_internal_pb_all_types_proto_init() {
 			}
 		}
 		file_internal_pb_all_types_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NoFields); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_pb_all_types_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
 			switch v := v.(*TestAllTypes_NestedMessage); i {
+			case 0:
+				return &v.state
+			case 1:
+				return &v.sizeCache
+			case 2:
+				return &v.unknownFields
+			default:
+				return nil
+			}
+		}
+		file_internal_pb_all_types_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
+			switch v := v.(*NoFields_NestedMsg); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -1161,7 +1289,7 @@ func file_internal_pb_all_types_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_internal_pb_all_types_proto_rawDesc,
 			NumEnums:      2,
-			NumMessages:   8,
+			NumMessages:   11,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
