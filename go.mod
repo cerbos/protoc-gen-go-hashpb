@@ -1,10 +1,10 @@
 module github.com/cerbos/protoc-gen-go-hashpb
 
-go 1.17
+go 1.19
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2
-	google.golang.org/protobuf v1.27.1
+	google.golang.org/protobuf v1.28.1
 )
 
 require (
