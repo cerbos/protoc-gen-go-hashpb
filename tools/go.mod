@@ -1,6 +1,6 @@
 module github.com/cerbos/hashpb/tools
 
-go 1.17
+go 1.19
 
 require (
 	github.com/bufbuild/buf v1.15.0
