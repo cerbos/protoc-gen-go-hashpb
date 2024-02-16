@@ -46,6 +46,14 @@ func TestHashPB(t *testing.T) {
 			name:  "fully populated nested",
 			input: mkNestedTestAllTypesMsg(3),
 		},
+		{
+			name:  "fully populated optional",
+			input: mkTestAllTypesOptionalMsg(),
+		},
+		{
+			name:  "fully populated optional and empty",
+			input: mkTestAllTypesOptionalMsgEmpty(),
+		},
 	}
 
 	options := []struct {
@@ -204,6 +212,36 @@ func mkTestAllTypesMsg() *pb.TestAllTypes {
 		MapBoolString:         map[bool]string{true: "a", false: "b"},
 		MapInt64NestedType:    map[int64]*pb.TestAllTypes_NestedMessage{1: {Bb: 1}},
 	}
+}
+
+func mkTestAllTypesOptionalMsg() *pb.TestAllTypesOptional {
+	return &pb.TestAllTypesOptional{
+		SingleInt32:         proto.Int32(42),
+		SingleInt64:         proto.Int64(42),
+		SingleUint32:        proto.Uint32(42),
+		SingleUint64:        proto.Uint64(42),
+		SingleSint32:        proto.Int32(42),
+		SingleSint64:        proto.Int64(42),
+		SingleFixed32:       proto.Uint32(42),
+		SingleFixed64:       proto.Uint64(42),
+		SingleSfixed32:      proto.Int32(42),
+		SingleSfixed64:      proto.Int64(42),
+		SingleFloat:         proto.Float32(42.42),
+		SingleDouble:        proto.Float64(42.42),
+		SingleBool:          proto.Bool(true),
+		SingleString:        proto.String("wibble wobble"),
+		SingleBytes:         []byte("wibble wobble"),
+		StandaloneEnum:      pb.TestAllTypesOptional_BAR.Enum(),
+		SingleDuration:      durationpb.New(10 * time.Minute),
+		SingleTimestamp:     timestamppb.New(time.Unix(1642694886, 0)),
+		SingleInt64Wrapper:  wrapperspb.Int64(42),
+		SingleStringWrapper: wrapperspb.String("wibble wobble"),
+		SingleNestedMessage: &pb.TestAllTypesOptional_NestedMessage{Bb: proto.Int32(42)},
+	}
+}
+
+func mkTestAllTypesOptionalMsgEmpty() *pb.TestAllTypesOptional {
+	return &pb.TestAllTypesOptional{}
 }
 
 func BenchmarkHashPB(b *testing.B) {

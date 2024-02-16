@@ -112,3 +112,51 @@ message NoFields {
         map<string,NestedTestAllTypes> nested_messages = 1;
     }
 }
+
+message TestAllTypesOptional {
+  message NestedMessage {
+    optional int32 bb = 1;
+  }
+
+  enum NestedEnum {
+    FOO = 0;
+    BAR = 1;
+    BAZ = 2;
+  }
+
+  // Singular
+  optional int32 single_int32 = 1;
+  optional int64 single_int64 = 2;
+  optional uint32 single_uint32 = 3;
+  optional uint64 single_uint64 = 4;
+  optional sint32 single_sint32 = 5;
+  optional sint64 single_sint64 = 6;
+  optional fixed32 single_fixed32 = 7;
+  optional fixed64 single_fixed64 = 8;
+  optional sfixed32 single_sfixed32 = 9;
+  optional sfixed64 single_sfixed64 = 10;
+  optional float single_float = 11;
+  optional double single_double = 12;
+  optional bool single_bool = 13;
+  optional string single_string = 14;
+  optional bytes single_bytes = 15;
+  optional NestedEnum standalone_enum = 22;
+
+  // Wellknown.
+  optional google.protobuf.Any single_any = 100;
+  optional google.protobuf.Duration single_duration = 101;
+  optional google.protobuf.Timestamp single_timestamp = 102;
+  optional google.protobuf.Struct single_struct = 103;
+  optional google.protobuf.Value single_value = 104;
+  optional google.protobuf.Int64Value single_int64_wrapper = 105;
+  optional google.protobuf.Int32Value single_int32_wrapper = 106;
+  optional google.protobuf.DoubleValue single_double_wrapper = 107;
+  optional google.protobuf.FloatValue single_float_wrapper = 108;
+  optional google.protobuf.UInt64Value single_uint64_wrapper = 109;
+  optional google.protobuf.UInt32Value single_uint32_wrapper = 110;
+  optional google.protobuf.StringValue single_string_wrapper = 111;
+  optional google.protobuf.BoolValue single_bool_wrapper = 112;
+  optional google.protobuf.BytesValue single_bytes_wrapper = 113;
+
+  optional NestedMessage single_nested_message = 18;
+}
