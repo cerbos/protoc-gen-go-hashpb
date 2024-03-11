@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/pluginpb"
 )
 
 const (
@@ -53,6 +54,7 @@ func init() {
 }
 
 func Generate(p *protogen.Plugin) error {
+	p.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
 	// group files by import path because the helpers need to be generated at the package level.
 	pkgFiles := make(map[protogen.GoImportPath][]*protogen.File)
 	for _, f := range p.Files {
@@ -164,7 +166,7 @@ func (g *codegen) genHelperForMsg(gf *protogen.GeneratedFile, msg *protogen.Mess
 	oneOfs := make(map[string]struct{})
 
 	for _, field := range fields {
-		if field.Oneof != nil {
+		if field.Oneof != nil && !field.Oneof.Desc.IsSynthetic() {
 			if _, ok := oneOfs[field.Oneof.GoName]; !ok {
 				g.genOneOfField(gf, field)
 				oneOfs[field.Oneof.GoName] = struct{}{}
@@ -186,7 +188,7 @@ func (g *codegen) genField(gf *protogen.GeneratedFile, field *protogen.Field) {
 	case field.Desc.IsMap():
 		g.genMapField(gf, field)
 	default:
-		g.genSingularField(gf, field.Desc, fieldAccess(field.GoName))
+		g.genSingularField(gf, field.Desc, fieldAccess(fmt.Sprintf("Get%s()", field.GoName)))
 	}
 
 	gf.P("}")

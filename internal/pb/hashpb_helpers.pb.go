@@ -17,14 +17,14 @@ import (
 
 func cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m *NestedTestAllTypes, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["cerbos.hashpb.test.NestedTestAllTypes.child"]; !ok {
-		if m.Child != nil {
-			cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m.Child, hasher, ignore)
+		if m.GetChild() != nil {
+			cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m.GetChild(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.NestedTestAllTypes.payload"]; !ok {
-		if m.Payload != nil {
-			cerbos_hashpb_test_TestAllTypes_hashpb_sum(m.Payload, hasher, ignore)
+		if m.GetPayload() != nil {
+			cerbos_hashpb_test_TestAllTypes_hashpb_sum(m.GetPayload(), hasher, ignore)
 		}
 
 	}
@@ -33,72 +33,236 @@ func cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m *NestedTestAllTypes, has
 func cerbos_hashpb_test_NoFields_hashpb_sum(m *NoFields, hasher hash.Hash, ignore map[string]struct{}) {
 }
 
+func cerbos_hashpb_test_TestAllTypesOptional_NestedMessage_hashpb_sum(m *TestAllTypesOptional_NestedMessage, hasher hash.Hash, ignore map[string]struct{}) {
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.NestedMessage.bb"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetBb())))
+
+	}
+}
+
+func cerbos_hashpb_test_TestAllTypesOptional_hashpb_sum(m *TestAllTypesOptional, hasher hash.Hash, ignore map[string]struct{}) {
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_int32"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSingleInt32())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_int64"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSingleInt64())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_uint32"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSingleUint32())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_uint64"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, m.GetSingleUint64()))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_sint32"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(int64(m.GetSingleSint32()))))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_sint64"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(m.GetSingleSint64())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_fixed32"]; !ok {
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, uint32(m.GetSingleFixed32())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_fixed64"]; !ok {
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, m.GetSingleFixed64()))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_sfixed32"]; !ok {
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, uint32(m.GetSingleSfixed32())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_sfixed64"]; !ok {
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, uint64(m.GetSingleSfixed64())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_float"]; !ok {
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, math.Float32bits(m.GetSingleFloat())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_double"]; !ok {
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(m.GetSingleDouble())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_bool"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.GetSingleBool())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_string"]; !ok {
+		_, _ = hasher.Write(protowire.AppendString(nil, m.GetSingleString()))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_bytes"]; !ok {
+		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetSingleBytes()))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_nested_message"]; !ok {
+		if m.GetSingleNestedMessage() != nil {
+			cerbos_hashpb_test_TestAllTypesOptional_NestedMessage_hashpb_sum(m.GetSingleNestedMessage(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.standalone_enum"]; !ok {
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetStandaloneEnum())))
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_any"]; !ok {
+		if m.GetSingleAny() != nil {
+			google_protobuf_Any_hashpb_sum(m.GetSingleAny(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_duration"]; !ok {
+		if m.GetSingleDuration() != nil {
+			google_protobuf_Duration_hashpb_sum(m.GetSingleDuration(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_timestamp"]; !ok {
+		if m.GetSingleTimestamp() != nil {
+			google_protobuf_Timestamp_hashpb_sum(m.GetSingleTimestamp(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_struct"]; !ok {
+		if m.GetSingleStruct() != nil {
+			google_protobuf_Struct_hashpb_sum(m.GetSingleStruct(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_value"]; !ok {
+		if m.GetSingleValue() != nil {
+			google_protobuf_Value_hashpb_sum(m.GetSingleValue(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_int64_wrapper"]; !ok {
+		if m.GetSingleInt64Wrapper() != nil {
+			google_protobuf_Int64Value_hashpb_sum(m.GetSingleInt64Wrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_int32_wrapper"]; !ok {
+		if m.GetSingleInt32Wrapper() != nil {
+			google_protobuf_Int32Value_hashpb_sum(m.GetSingleInt32Wrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_double_wrapper"]; !ok {
+		if m.GetSingleDoubleWrapper() != nil {
+			google_protobuf_DoubleValue_hashpb_sum(m.GetSingleDoubleWrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_float_wrapper"]; !ok {
+		if m.GetSingleFloatWrapper() != nil {
+			google_protobuf_FloatValue_hashpb_sum(m.GetSingleFloatWrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_uint64_wrapper"]; !ok {
+		if m.GetSingleUint64Wrapper() != nil {
+			google_protobuf_UInt64Value_hashpb_sum(m.GetSingleUint64Wrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_uint32_wrapper"]; !ok {
+		if m.GetSingleUint32Wrapper() != nil {
+			google_protobuf_UInt32Value_hashpb_sum(m.GetSingleUint32Wrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_string_wrapper"]; !ok {
+		if m.GetSingleStringWrapper() != nil {
+			google_protobuf_StringValue_hashpb_sum(m.GetSingleStringWrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_bool_wrapper"]; !ok {
+		if m.GetSingleBoolWrapper() != nil {
+			google_protobuf_BoolValue_hashpb_sum(m.GetSingleBoolWrapper(), hasher, ignore)
+		}
+
+	}
+	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_bytes_wrapper"]; !ok {
+		if m.GetSingleBytesWrapper() != nil {
+			google_protobuf_BytesValue_hashpb_sum(m.GetSingleBytesWrapper(), hasher, ignore)
+		}
+
+	}
+}
+
 func cerbos_hashpb_test_TestAllTypes_NestedMessage_hashpb_sum(m *TestAllTypes_NestedMessage, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.NestedMessage.bb"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Bb)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetBb())))
 
 	}
 }
 
 func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_int32"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.SingleInt32)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSingleInt32())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_int64"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.SingleInt64)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSingleInt64())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_uint32"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.SingleUint32)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSingleUint32())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_uint64"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, m.SingleUint64))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, m.GetSingleUint64()))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_sint32"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(int64(m.SingleSint32))))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(int64(m.GetSingleSint32()))))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_sint64"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(m.SingleSint64)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(m.GetSingleSint64())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_fixed32"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed32(nil, uint32(m.SingleFixed32)))
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, uint32(m.GetSingleFixed32())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_fixed64"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed64(nil, m.SingleFixed64))
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, m.GetSingleFixed64()))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_sfixed32"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed32(nil, uint32(m.SingleSfixed32)))
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, uint32(m.GetSingleSfixed32())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_sfixed64"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed64(nil, uint64(m.SingleSfixed64)))
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, uint64(m.GetSingleSfixed64())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_float"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed32(nil, math.Float32bits(m.SingleFloat)))
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, math.Float32bits(m.GetSingleFloat())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_double"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(m.SingleDouble)))
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(m.GetSingleDouble())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_bool"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.SingleBool)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.GetSingleBool())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_string"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.SingleString))
+		_, _ = hasher.Write(protowire.AppendString(nil, m.GetSingleString()))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_bytes"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.SingleBytes))
+		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetSingleBytes()))
 
 	}
 	if m.NestedType != nil {
@@ -116,7 +280,7 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.standalone_enum"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.StandaloneEnum)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetStandaloneEnum())))
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.repeated_int32"]; !ok {
@@ -371,86 +535,86 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_any"]; !ok {
-		if m.SingleAny != nil {
-			google_protobuf_Any_hashpb_sum(m.SingleAny, hasher, ignore)
+		if m.GetSingleAny() != nil {
+			google_protobuf_Any_hashpb_sum(m.GetSingleAny(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_duration"]; !ok {
-		if m.SingleDuration != nil {
-			google_protobuf_Duration_hashpb_sum(m.SingleDuration, hasher, ignore)
+		if m.GetSingleDuration() != nil {
+			google_protobuf_Duration_hashpb_sum(m.GetSingleDuration(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_timestamp"]; !ok {
-		if m.SingleTimestamp != nil {
-			google_protobuf_Timestamp_hashpb_sum(m.SingleTimestamp, hasher, ignore)
+		if m.GetSingleTimestamp() != nil {
+			google_protobuf_Timestamp_hashpb_sum(m.GetSingleTimestamp(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_struct"]; !ok {
-		if m.SingleStruct != nil {
-			google_protobuf_Struct_hashpb_sum(m.SingleStruct, hasher, ignore)
+		if m.GetSingleStruct() != nil {
+			google_protobuf_Struct_hashpb_sum(m.GetSingleStruct(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_value"]; !ok {
-		if m.SingleValue != nil {
-			google_protobuf_Value_hashpb_sum(m.SingleValue, hasher, ignore)
+		if m.GetSingleValue() != nil {
+			google_protobuf_Value_hashpb_sum(m.GetSingleValue(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_int64_wrapper"]; !ok {
-		if m.SingleInt64Wrapper != nil {
-			google_protobuf_Int64Value_hashpb_sum(m.SingleInt64Wrapper, hasher, ignore)
+		if m.GetSingleInt64Wrapper() != nil {
+			google_protobuf_Int64Value_hashpb_sum(m.GetSingleInt64Wrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_int32_wrapper"]; !ok {
-		if m.SingleInt32Wrapper != nil {
-			google_protobuf_Int32Value_hashpb_sum(m.SingleInt32Wrapper, hasher, ignore)
+		if m.GetSingleInt32Wrapper() != nil {
+			google_protobuf_Int32Value_hashpb_sum(m.GetSingleInt32Wrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_double_wrapper"]; !ok {
-		if m.SingleDoubleWrapper != nil {
-			google_protobuf_DoubleValue_hashpb_sum(m.SingleDoubleWrapper, hasher, ignore)
+		if m.GetSingleDoubleWrapper() != nil {
+			google_protobuf_DoubleValue_hashpb_sum(m.GetSingleDoubleWrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_float_wrapper"]; !ok {
-		if m.SingleFloatWrapper != nil {
-			google_protobuf_FloatValue_hashpb_sum(m.SingleFloatWrapper, hasher, ignore)
+		if m.GetSingleFloatWrapper() != nil {
+			google_protobuf_FloatValue_hashpb_sum(m.GetSingleFloatWrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_uint64_wrapper"]; !ok {
-		if m.SingleUint64Wrapper != nil {
-			google_protobuf_UInt64Value_hashpb_sum(m.SingleUint64Wrapper, hasher, ignore)
+		if m.GetSingleUint64Wrapper() != nil {
+			google_protobuf_UInt64Value_hashpb_sum(m.GetSingleUint64Wrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_uint32_wrapper"]; !ok {
-		if m.SingleUint32Wrapper != nil {
-			google_protobuf_UInt32Value_hashpb_sum(m.SingleUint32Wrapper, hasher, ignore)
+		if m.GetSingleUint32Wrapper() != nil {
+			google_protobuf_UInt32Value_hashpb_sum(m.GetSingleUint32Wrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_string_wrapper"]; !ok {
-		if m.SingleStringWrapper != nil {
-			google_protobuf_StringValue_hashpb_sum(m.SingleStringWrapper, hasher, ignore)
+		if m.GetSingleStringWrapper() != nil {
+			google_protobuf_StringValue_hashpb_sum(m.GetSingleStringWrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_bool_wrapper"]; !ok {
-		if m.SingleBoolWrapper != nil {
-			google_protobuf_BoolValue_hashpb_sum(m.SingleBoolWrapper, hasher, ignore)
+		if m.GetSingleBoolWrapper() != nil {
+			google_protobuf_BoolValue_hashpb_sum(m.GetSingleBoolWrapper(), hasher, ignore)
 		}
 
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_bytes_wrapper"]; !ok {
-		if m.SingleBytesWrapper != nil {
-			google_protobuf_BytesValue_hashpb_sum(m.SingleBytesWrapper, hasher, ignore)
+		if m.GetSingleBytesWrapper() != nil {
+			google_protobuf_BytesValue_hashpb_sum(m.GetSingleBytesWrapper(), hasher, ignore)
 		}
 
 	}
@@ -458,64 +622,64 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 
 func google_protobuf_Any_hashpb_sum(m *anypb.Any, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.Any.type_url"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.TypeUrl))
+		_, _ = hasher.Write(protowire.AppendString(nil, m.GetTypeUrl()))
 
 	}
 	if _, ok := ignore["google.protobuf.Any.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.Value))
+		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetValue()))
 
 	}
 }
 
 func google_protobuf_BoolValue_hashpb_sum(m *wrapperspb.BoolValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.BoolValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.Value)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.GetValue())))
 
 	}
 }
 
 func google_protobuf_BytesValue_hashpb_sum(m *wrapperspb.BytesValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.BytesValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.Value))
+		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetValue()))
 
 	}
 }
 
 func google_protobuf_DoubleValue_hashpb_sum(m *wrapperspb.DoubleValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.DoubleValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(m.Value)))
+		_, _ = hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(m.GetValue())))
 
 	}
 }
 
 func google_protobuf_Duration_hashpb_sum(m *durationpb.Duration, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.Duration.seconds"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Seconds)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSeconds())))
 
 	}
 	if _, ok := ignore["google.protobuf.Duration.nanos"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Nanos)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetNanos())))
 
 	}
 }
 
 func google_protobuf_FloatValue_hashpb_sum(m *wrapperspb.FloatValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.FloatValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendFixed32(nil, math.Float32bits(m.Value)))
+		_, _ = hasher.Write(protowire.AppendFixed32(nil, math.Float32bits(m.GetValue())))
 
 	}
 }
 
 func google_protobuf_Int32Value_hashpb_sum(m *wrapperspb.Int32Value, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.Int32Value.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Value)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetValue())))
 
 	}
 }
 
 func google_protobuf_Int64Value_hashpb_sum(m *wrapperspb.Int64Value, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.Int64Value.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Value)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetValue())))
 
 	}
 }
@@ -535,7 +699,7 @@ func google_protobuf_ListValue_hashpb_sum(m *structpb.ListValue, hasher hash.Has
 
 func google_protobuf_StringValue_hashpb_sum(m *wrapperspb.StringValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.StringValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.Value))
+		_, _ = hasher.Write(protowire.AppendString(nil, m.GetValue()))
 
 	}
 }
@@ -564,25 +728,25 @@ func google_protobuf_Struct_hashpb_sum(m *structpb.Struct, hasher hash.Hash, ign
 
 func google_protobuf_Timestamp_hashpb_sum(m *timestamppb.Timestamp, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.Timestamp.seconds"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Seconds)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetSeconds())))
 
 	}
 	if _, ok := ignore["google.protobuf.Timestamp.nanos"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Nanos)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetNanos())))
 
 	}
 }
 
 func google_protobuf_UInt32Value_hashpb_sum(m *wrapperspb.UInt32Value, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.UInt32Value.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.Value)))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(m.GetValue())))
 
 	}
 }
 
 func google_protobuf_UInt64Value_hashpb_sum(m *wrapperspb.UInt64Value, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.UInt64Value.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendVarint(nil, m.Value))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, m.GetValue()))
 
 	}
 }

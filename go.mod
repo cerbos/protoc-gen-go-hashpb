@@ -4,7 +4,7 @@ go 1.19
 
 require (
 	github.com/cespare/xxhash/v2 v2.1.2
-	google.golang.org/protobuf v1.28.1
+	google.golang.org/protobuf v1.32.0
 )
 
 require (
