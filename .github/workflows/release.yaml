@@ -12,25 +12,10 @@ jobs:
       - name: Install Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.20.x
+          go-version: 1.22.x
 
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Log in to Buf plugin registry
-        uses: docker/login-action@v1
-        with:
-          registry: plugins.buf.build
-          username: cerbos
-          password: ${{ secrets.BUF_TOKEN }}
-
-      - uses: actions/cache@v2
-        with:
-          path: |
-            ~/go/pkg/mod
-            ~/.cache/go-build
-            ~/.cache/protoc-gen-go-hashpb/bin
-          key: ${{ runner.os }}-go-${{ hashFiles('**/go.mod') }}
 
       - name: GoReleaser
         uses: goreleaser/goreleaser-action@v2
