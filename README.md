@@ -2,7 +2,7 @@
 
 A protobuf plugin to generate hash functions for messages.
 
-Hashing messages encoded using Protocol Buffers is tricky because there is [no guarantee that the serialized form is stable](https://developers.google.com/protocol-buffers/docs/encoding) between different implementations, architectures, or even library versions. 
+Hashing messages encoded using Protocol Buffers is tricky because there is [no guarantee that the serialized form is stable](https://developers.google.com/protocol-buffers/docs/encoding) between different implementations, architectures, or even library versions.
 This plugin generates a hash function that does a depth-first traversal of the populated values (including default values) of the message in field number order and feeds it to the provided `hash.Hash` implementation. Map values are accessed in key order as well. Because of this deterministic traversal order, the hash generated for two identical protobuf messages should be the same.
 
 NOTE: While we have tested this plugin quite extensively, some edge cases may remain. Use at your own risk.
@@ -10,8 +10,6 @@ NOTE: While we have tested this plugin quite extensively, some edge cases may re
 ## Install
 
 Download the latest binary for your environment from https://github.com/cerbos/protoc-gen-go-hashpb/releases.
-
-This plugin is also available from the Buf Schema Registry as `buf.build/cerbos/protoc-gen-go-hashpb` and can be used as a [remote plugin](https://docs.buf.build/bsr/remote-generation/remote-plugin-execution).
 
 Alternatively, install from source:
 
@@ -26,15 +24,8 @@ go install github.com/cerbos/protoc-gen-go-hashpb@latest
 With `protoc`:
 
 ```shell
-protoc --plugin protoc-gen-go-hashpb=${GOBIN}/protoc-gen-go-hashpb --go_out=. --go-hashpb_out=. *.proto 
+protoc --plugin protoc-gen-go-hashpb=${GOBIN}/protoc-gen-go-hashpb --go_out=. --go-hashpb_out=. *.proto
 ```
-
-With [`buf`](https://github.com/bufbuild/buf): 
-
-```shell
-buf generate --template='{"version":"v1","plugins":[{"name":"go","out":"."},{"name":"go-hashpb","out":"."}]}'
-```
-
 
 ### Calculate hashes using generated code
 
