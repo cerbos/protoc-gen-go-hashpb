@@ -12,6 +12,7 @@ import (
 
 	"google.golang.org/protobuf/compiler/protogen"
 	"google.golang.org/protobuf/reflect/protoreflect"
+	"google.golang.org/protobuf/types/descriptorpb"
 	"google.golang.org/protobuf/types/pluginpb"
 )
 
@@ -54,7 +55,9 @@ func init() {
 }
 
 func Generate(p *protogen.Plugin) error {
-	p.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL)
+	p.SupportedFeatures = uint64(pluginpb.CodeGeneratorResponse_FEATURE_PROTO3_OPTIONAL) | uint64(pluginpb.CodeGeneratorResponse_FEATURE_SUPPORTS_EDITIONS)
+	p.SupportedEditionsMinimum = descriptorpb.Edition_EDITION_2023
+	p.SupportedEditionsMaximum = descriptorpb.Edition_EDITION_2024
 	// group files by import path because the helpers need to be generated at the package level.
 	pkgFiles := make(map[protogen.GoImportPath][]*protogen.File)
 	for _, f := range p.Files {
@@ -62,8 +65,10 @@ func Generate(p *protogen.Plugin) error {
 			continue
 		}
 
-		if f.Desc.Syntax() != protoreflect.Proto3 {
-			return fmt.Errorf("file is not protobuf v3: %s", f.Desc.Path())
+		switch f.Desc.Syntax() {
+		case protoreflect.Editions, protoreflect.Proto3:
+		default:
+			return fmt.Errorf("unsupported syntax %q: %s", f.Desc.Syntax(), f.Desc.Path())
 		}
 
 		pkgFiles[f.GoImportPath] = append(pkgFiles[f.GoImportPath], f)
