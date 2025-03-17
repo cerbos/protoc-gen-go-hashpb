@@ -17,15 +17,13 @@ import (
 )
 
 const (
-	funcSuffix   = "_hashpb_sum"
-	hasherImp    = protogen.GoImportPath("hash")
-	mathImp      = protogen.GoImportPath("math")
-	protowireImp = protogen.GoImportPath("google.golang.org/protobuf/encoding/protowire")
-	sortImp      = protogen.GoImportPath("sort")
-
-	boolKeyCmpFn      = "func(i, j int) bool{ return !keys[i] && keys[j] }"
-	primitiveKeyCmpFn = "func(i, j int) bool { return keys[i] < keys[j] }"
-	receiverIdent     = "m"
+	funcSuffix    = "_hashpb_sum"
+	hasherImp     = protogen.GoImportPath("hash")
+	mathImp       = protogen.GoImportPath("math")
+	protowireImp  = protogen.GoImportPath("google.golang.org/protobuf/encoding/protowire")
+	mapsImp       = protogen.GoImportPath("maps")
+	slicesImp     = protogen.GoImportPath("slices")
+	receiverIdent = "m"
 )
 
 var (
@@ -41,7 +39,8 @@ var (
 	float32BitsFn   = mathImp.Ident("Float32bits")
 	float64BitsFn   = mathImp.Ident("Float64bits")
 	hashFn          = hasherImp.Ident("Hash")
-	sortSliceFn     = sortImp.Ident("Slice")
+	mapKeysFn       = mapsImp.Ident("Keys")
+	sortedFn        = slicesImp.Ident("Sorted")
 
 	nonIdentifierChars = regexp.MustCompile(`[^\w]+`)
 )
@@ -225,42 +224,18 @@ func (g *codegen) genListField(gf *protogen.GeneratedFile, field *protogen.Field
 
 func (g *codegen) genMapField(gf *protogen.GeneratedFile, field *protogen.Field) {
 	fieldName := fieldAccess(field.GoName)
-	gf.P("if len(", fieldName, ") > 0 {")
-	typeName, cmpFn := typeAndCompareFnForMapKey(field.Desc.MapKey())
-
-	gf.P("keys := make([]", typeName, ", len(", fieldName, "))")
-	gf.P("i := 0")
-	gf.P("for k := range ", fieldName, " {")
-	gf.P("keys[i] = k")
-	gf.P("i++")
-	gf.P("}")
-	gf.P()
-
-	gf.P(sortSliceFn, "(keys,", cmpFn, ")")
-	gf.P()
-
-	gf.P("for _, k := range keys {")
-	g.genSingularField(gf, field.Desc.MapValue(), fmt.Sprintf("%s[k]", fieldName))
-	gf.P("}")
-	gf.P("}")
-}
-
-func typeAndCompareFnForMapKey(mk protoreflect.FieldDescriptor) (string, string) {
-	switch mk.Kind() {
-	case protoreflect.BoolKind:
-		return "bool", boolKeyCmpFn
-	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
-		return "int32", primitiveKeyCmpFn
-	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
-		return "int64", primitiveKeyCmpFn
-	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
-		return "uint32", primitiveKeyCmpFn
-	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
-		return "uint64", primitiveKeyCmpFn
-	case protoreflect.StringKind:
-		return "string", primitiveKeyCmpFn
-	default:
-		panic(fmt.Errorf("unexpected kind for map key: %s", mk.Kind().String()))
+	if field.Desc.MapKey().Kind() == protoreflect.BoolKind {
+		for _, k := range []bool{false, true} {
+			gf.P("if v, ok := ", fieldName, "[", k, "]; ok {")
+			g.genSingularField(gf, field.Desc.MapValue(), "v")
+			gf.P("}")
+		}
+	} else {
+		gf.P("if len(", fieldName, ") > 0 {")
+		gf.P("for _, k := range ", sortedFn, "(", mapKeysFn, "(", fieldName, ")) {")
+		g.genSingularField(gf, field.Desc.MapValue(), fmt.Sprintf("%s[k]", fieldName))
+		gf.P("}")
+		gf.P("}")
 	}
 }
 
@@ -323,8 +298,6 @@ func (g *codegen) genSingularField(gf *protogen.GeneratedFile, fieldDesc protore
 	default:
 		panic(fmt.Errorf("unhandled field kind %s", fieldDesc.Kind().String()))
 	}
-
-	gf.P()
 }
 
 func fieldAccess(name string) string {
