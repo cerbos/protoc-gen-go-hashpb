@@ -222,7 +222,7 @@ func (g *codegen) genMapField(gf *protogen.GeneratedFile, field *protogen.Field)
 	if field.Desc.MapKey().Kind() == protoreflect.BoolKind {
 		for _, k := range []bool{false, true} {
 			gf.P("if v, ok := ", fieldName, "[", k, "]; ok {")
-			g.genSingularField(gf, field.Desc.MapKey(), k)
+			gf.P(writeFn, appendBoolFn, "(nil, ", k, "))")
 			g.genSingularField(gf, field.Desc.MapValue(), "v")
 			gf.P("}")
 		}
