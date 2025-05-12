@@ -401,9 +401,11 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_bool_string"]; !ok {
 		if v, ok := m.MapBoolString[false]; ok {
+			protowire.AppendVarint(nil, protowire.EncodeBool(false))
 			_, _ = hasher.Write(protowire.AppendString(nil, v))
 		}
 		if v, ok := m.MapBoolString[true]; ok {
+			protowire.AppendVarint(nil, protowire.EncodeBool(true))
 			_, _ = hasher.Write(protowire.AppendString(nil, v))
 		}
 	}
