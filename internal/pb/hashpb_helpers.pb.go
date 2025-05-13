@@ -378,6 +378,7 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_string_string"]; !ok {
 		if len(m.MapStringString) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapStringString)) {
+				_, _ = hasher.Write(protowire.AppendString(nil, k))
 				_, _ = hasher.Write(protowire.AppendString(nil, m.MapStringString[k]))
 			}
 		}
@@ -385,6 +386,7 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_uint64_string"]; !ok {
 		if len(m.MapUint64String) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapUint64String)) {
+				_, _ = hasher.Write(protowire.AppendVarint(nil, k))
 				_, _ = hasher.Write(protowire.AppendString(nil, m.MapUint64String[k]))
 			}
 		}
@@ -392,21 +394,25 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_int32_string"]; !ok {
 		if len(m.MapInt32String) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapInt32String)) {
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(k)))
 				_, _ = hasher.Write(protowire.AppendString(nil, m.MapInt32String[k]))
 			}
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_bool_string"]; !ok {
 		if v, ok := m.MapBoolString[false]; ok {
+			protowire.AppendVarint(nil, protowire.EncodeBool(false))
 			_, _ = hasher.Write(protowire.AppendString(nil, v))
 		}
 		if v, ok := m.MapBoolString[true]; ok {
+			protowire.AppendVarint(nil, protowire.EncodeBool(true))
 			_, _ = hasher.Write(protowire.AppendString(nil, v))
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_int64_nested_type"]; !ok {
 		if len(m.MapInt64NestedType) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapInt64NestedType)) {
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(k)))
 				if m.MapInt64NestedType[k] != nil {
 					cerbos_hashpb_test_TestAllTypes_NestedMessage_hashpb_sum(m.MapInt64NestedType[k], hasher, ignore)
 				}
@@ -561,6 +567,7 @@ func google_protobuf_Struct_hashpb_sum(m *structpb.Struct, hasher hash.Hash, ign
 	if _, ok := ignore["google.protobuf.Struct.fields"]; !ok {
 		if len(m.Fields) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.Fields)) {
+				_, _ = hasher.Write(protowire.AppendString(nil, k))
 				if m.Fields[k] != nil {
 					google_protobuf_Value_hashpb_sum(m.Fields[k], hasher, ignore)
 				}

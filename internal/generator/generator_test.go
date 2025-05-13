@@ -84,6 +84,17 @@ func TestHashPB(t *testing.T) {
 	}
 }
 
+func TestHashMapPB(t *testing.T) {
+	m1 := mkTestMapTypesMsg(1)
+	hm1 := sum64(m1, nil)
+	m2 := mkTestMapTypesMsg(2)
+	hm2 := sum64(m2, nil)
+
+	if hm1 == hm2 {
+		t.Fatalf("Expected h1 != h2")
+	}
+}
+
 func TestIgnore(t *testing.T) {
 	testCases := []struct {
 		name   string
@@ -211,6 +222,29 @@ func mkTestAllTypesMsg() *pb.TestAllTypes {
 		MapInt32String:        map[int32]string{1: "a", 2: "b", 3: "c"},
 		MapBoolString:         map[bool]string{true: "a", false: "b"},
 		MapInt64NestedType:    map[int64]*pb.TestAllTypes_NestedMessage{1: {Bb: 1}},
+	}
+}
+
+func mkTestMapTypesMsg(variant int) *pb.TestAllTypes {
+	switch variant {
+	case 1:
+		return &pb.TestAllTypes{
+			MapStringString:    map[string]string{"a": "b"},
+			MapUint64String:    map[uint64]string{1: "a"},
+			MapInt32String:     map[int32]string{1: "a"},
+			MapBoolString:      map[bool]string{true: "a"},
+			MapInt64NestedType: map[int64]*pb.TestAllTypes_NestedMessage{1: {Bb: 1}},
+		}
+	case 2:
+		return &pb.TestAllTypes{
+			MapStringString:    map[string]string{"b": "b"},
+			MapUint64String:    map[uint64]string{2: "a"},
+			MapInt32String:     map[int32]string{2: "a"},
+			MapBoolString:      map[bool]string{false: "a"},
+			MapInt64NestedType: map[int64]*pb.TestAllTypes_NestedMessage{2: {Bb: 1}},
+		}
+	default:
+		panic("invalid variant")
 	}
 }
 
