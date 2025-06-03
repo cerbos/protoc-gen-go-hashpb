@@ -14,6 +14,7 @@ import (
 	maps "maps"
 	math "math"
 	slices "slices"
+	unsafe "unsafe"
 )
 
 func cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m *NestedTestAllTypes, hasher hash.Hash, ignore map[string]struct{}) {
@@ -79,10 +80,12 @@ func cerbos_hashpb_test_TestAllTypesOptional_hashpb_sum(m *TestAllTypesOptional,
 		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.GetSingleBool())))
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_string"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.GetSingleString()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetSingleString()))))
+		_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.GetSingleString()), len(m.GetSingleString())))
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_bytes"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetSingleBytes()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetSingleBytes()))))
+		_, _ = hasher.Write(m.GetSingleBytes())
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypesOptional.single_nested_message"]; !ok {
 		if m.GetSingleNestedMessage() != nil {
@@ -211,10 +214,12 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 		_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(m.GetSingleBool())))
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_string"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.GetSingleString()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetSingleString()))))
+		_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.GetSingleString()), len(m.GetSingleString())))
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.single_bytes"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetSingleBytes()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetSingleBytes()))))
+		_, _ = hasher.Write(m.GetSingleBytes())
 	}
 	if m.NestedType != nil {
 		if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.nested_type"]; !ok {
@@ -325,14 +330,16 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.repeated_string"]; !ok {
 		if len(m.RepeatedString) > 0 {
 			for _, v := range m.RepeatedString {
-				_, _ = hasher.Write(protowire.AppendString(nil, v))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(v))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(v), len(v)))
 			}
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.repeated_bytes"]; !ok {
 		if len(m.RepeatedBytes) > 0 {
 			for _, v := range m.RepeatedBytes {
-				_, _ = hasher.Write(protowire.AppendBytes(nil, v))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(v))))
+				_, _ = hasher.Write(v)
 			}
 		}
 	}
@@ -355,14 +362,16 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.repeated_string_piece"]; !ok {
 		if len(m.RepeatedStringPiece) > 0 {
 			for _, v := range m.RepeatedStringPiece {
-				_, _ = hasher.Write(protowire.AppendString(nil, v))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(v))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(v), len(v)))
 			}
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.repeated_cord"]; !ok {
 		if len(m.RepeatedCord) > 0 {
 			for _, v := range m.RepeatedCord {
-				_, _ = hasher.Write(protowire.AppendString(nil, v))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(v))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(v), len(v)))
 			}
 		}
 	}
@@ -378,8 +387,10 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_string_string"]; !ok {
 		if len(m.MapStringString) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapStringString)) {
-				_, _ = hasher.Write(protowire.AppendString(nil, k))
-				_, _ = hasher.Write(protowire.AppendString(nil, m.MapStringString[k]))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(k))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(k), len(k)))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.MapStringString[k]))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.MapStringString[k]), len(m.MapStringString[k])))
 			}
 		}
 	}
@@ -387,7 +398,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 		if len(m.MapUint64String) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapUint64String)) {
 				_, _ = hasher.Write(protowire.AppendVarint(nil, k))
-				_, _ = hasher.Write(protowire.AppendString(nil, m.MapUint64String[k]))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.MapUint64String[k]))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.MapUint64String[k]), len(m.MapUint64String[k])))
 			}
 		}
 	}
@@ -395,18 +407,21 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 		if len(m.MapInt32String) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.MapInt32String)) {
 				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(k)))
-				_, _ = hasher.Write(protowire.AppendString(nil, m.MapInt32String[k]))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.MapInt32String[k]))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.MapInt32String[k]), len(m.MapInt32String[k])))
 			}
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_bool_string"]; !ok {
 		if v, ok := m.MapBoolString[false]; ok {
 			protowire.AppendVarint(nil, protowire.EncodeBool(false))
-			_, _ = hasher.Write(protowire.AppendString(nil, v))
+			_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(v))))
+			_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(v), len(v)))
 		}
 		if v, ok := m.MapBoolString[true]; ok {
 			protowire.AppendVarint(nil, protowire.EncodeBool(true))
-			_, _ = hasher.Write(protowire.AppendString(nil, v))
+			_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(v))))
+			_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(v), len(v)))
 		}
 	}
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_int64_nested_type"]; !ok {
@@ -493,10 +508,12 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 
 func google_protobuf_Any_hashpb_sum(m *anypb.Any, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.Any.type_url"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.GetTypeUrl()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetTypeUrl()))))
+		_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.GetTypeUrl()), len(m.GetTypeUrl())))
 	}
 	if _, ok := ignore["google.protobuf.Any.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetValue()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetValue()))))
+		_, _ = hasher.Write(m.GetValue())
 	}
 }
 
@@ -508,7 +525,8 @@ func google_protobuf_BoolValue_hashpb_sum(m *wrapperspb.BoolValue, hasher hash.H
 
 func google_protobuf_BytesValue_hashpb_sum(m *wrapperspb.BytesValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.BytesValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendBytes(nil, m.GetValue()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetValue()))))
+		_, _ = hasher.Write(m.GetValue())
 	}
 }
 
@@ -559,7 +577,8 @@ func google_protobuf_ListValue_hashpb_sum(m *structpb.ListValue, hasher hash.Has
 
 func google_protobuf_StringValue_hashpb_sum(m *wrapperspb.StringValue, hasher hash.Hash, ignore map[string]struct{}) {
 	if _, ok := ignore["google.protobuf.StringValue.value"]; !ok {
-		_, _ = hasher.Write(protowire.AppendString(nil, m.GetValue()))
+		_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(m.GetValue()))))
+		_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.GetValue()), len(m.GetValue())))
 	}
 }
 
@@ -567,7 +586,8 @@ func google_protobuf_Struct_hashpb_sum(m *structpb.Struct, hasher hash.Hash, ign
 	if _, ok := ignore["google.protobuf.Struct.fields"]; !ok {
 		if len(m.Fields) > 0 {
 			for _, k := range slices.Sorted(maps.Keys(m.Fields)) {
-				_, _ = hasher.Write(protowire.AppendString(nil, k))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(k))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(k), len(k)))
 				if m.Fields[k] != nil {
 					google_protobuf_Value_hashpb_sum(m.Fields[k], hasher, ignore)
 				}
@@ -606,7 +626,8 @@ func google_protobuf_Value_hashpb_sum(m *structpb.Value, hasher hash.Hash, ignor
 			case *structpb.Value_NumberValue:
 				_, _ = hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(t.NumberValue)))
 			case *structpb.Value_StringValue:
-				_, _ = hasher.Write(protowire.AppendString(nil, t.StringValue))
+				_, _ = hasher.Write(protowire.AppendVarint(nil, uint64(len(t.StringValue))))
+				_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(t.StringValue), len(t.StringValue)))
 			case *structpb.Value_BoolValue:
 				_, _ = hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(t.BoolValue)))
 			case *structpb.Value_StructValue:
