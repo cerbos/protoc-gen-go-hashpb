@@ -23,16 +23,15 @@ const (
 	protowireImp  = protogen.GoImportPath("google.golang.org/protobuf/encoding/protowire")
 	mapsImp       = protogen.GoImportPath("maps")
 	slicesImp     = protogen.GoImportPath("slices")
+	unsafeImp     = protogen.GoImportPath("unsafe")
 	receiverIdent = "m"
 )
 
 var (
 	Version = "dev"
 
-	appendBytesFn   = protowireImp.Ident("AppendBytes")
 	appendFixed32Fn = protowireImp.Ident("AppendFixed32")
 	appendFixed64Fn = protowireImp.Ident("AppendFixed64")
-	appendStringFn  = protowireImp.Ident("AppendString")
 	appendVarintFn  = protowireImp.Ident("AppendVarint")
 	encodeBoolFn    = protowireImp.Ident("EncodeBool")
 	encodeZigZagFn  = protowireImp.Ident("EncodeZigZag")
@@ -41,6 +40,9 @@ var (
 	hashFn          = hasherImp.Ident("Hash")
 	mapKeysFn       = mapsImp.Ident("Keys")
 	sortedFn        = slicesImp.Ident("Sorted")
+
+	unsafeSliceFn      = unsafeImp.Ident("Slice")
+	unsafeStringDataFn = unsafeImp.Ident("StringData")
 
 	nonIdentifierChars = regexp.MustCompile(`[^\w]+`)
 )
@@ -283,11 +285,15 @@ func (g *codegen) genSingularField(gf *protogen.GeneratedFile, fieldDesc protore
 		// hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(...)))
 		gf.P(writeFn, appendFixed64Fn, "(nil,", float64BitsFn, "(", fieldName, ")))")
 	case protoreflect.StringKind:
-		// hasher.Write(protowire.AppendString(nil, ...))
-		gf.P(writeFn, appendStringFn, "(nil, ", fieldName, "))")
+		// hasher.Write(protowire.AppendVarint(nil, uint64(len(s))))
+		// hasher.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
+		gf.P(writeFn, appendVarintFn, "(nil, uint64(len(", fieldName, "))))")
+		gf.P(writeFn, unsafeSliceFn, "(", unsafeStringDataFn, "(", fieldName, "), len(", fieldName, "))", ")")
 	case protoreflect.BytesKind:
-		// hasher.Write(protowire.AppendBytes(nil, ...))
-		gf.P(writeFn, appendBytesFn, "(nil, ", fieldName, "))")
+		// hasher.Write(protowire.AppendVarint(nil, uint64(len(b))))
+		// hasher.Write(b)
+		gf.P(writeFn, appendVarintFn, "(nil, uint64(len(", fieldName, "))))")
+		gf.P(writeFn, fieldName, ")")
 	case protoreflect.MessageKind:
 		gf.P("if ", fieldName, " != nil {")
 		gf.P(sumFuncName(fieldDesc.Message()), "(", fieldName, ",hasher, ignore)")
