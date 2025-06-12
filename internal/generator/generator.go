@@ -107,7 +107,7 @@ func (g *codegen) generateHelpers(files []*protogen.File) {
 		return
 	}
 
-	fileName := filepath.Join(filepath.Dir(files[0].Desc.Path()), "hashpb_helpers.pb.go")
+	fileName := filepath.Join(filepath.Dir(files[0].GeneratedFilenamePrefix), "hashpb_helpers.pb.go")
 	gf := g.newGeneratedFile(fileName, files, nil)
 
 	// sort message names to make the generated file predictable (no spurious diffs)
