@@ -162,7 +162,7 @@ func (g *codegen) genHelperForMsg(gf *protogen.GeneratedFile, msg *protogen.Mess
 		return fields[i].Desc.Number() < fields[j].Desc.Number()
 	})
 
-	gf.P("func ", sumFuncName(msg.Desc), "(", receiverIdent, " *", msg.GoIdent, ",hasher ", hashFn, ", ignore map[string]struct{}) {")
+	gf.P("func ", sumFuncName(msg.Desc), "(", receiverIdent, " *", msg.GoIdent, ", hasher ", hashFn, ", ignore map[string]struct{}, b *[10]byte) {")
 
 	oneOfs := make(map[string]struct{})
 
@@ -224,7 +224,7 @@ func (g *codegen) genMapField(gf *protogen.GeneratedFile, field *protogen.Field)
 	if field.Desc.MapKey().Kind() == protoreflect.BoolKind {
 		for _, k := range []bool{false, true} {
 			gf.P("if v, ok := ", fieldName, "[", k, "]; ok {")
-			gf.P(appendVarintFn, "(nil, ", encodeBoolFn, "(", k, "))")
+			gf.P("_, _ = hasher.Write(", appendVarintFn, "(b[:0], ", encodeBoolFn, "(", k, ")))")
 			g.genSingularField(gf, field.Desc.MapValue(), "v")
 			gf.P("}")
 		}
@@ -243,60 +243,60 @@ func (g *codegen) genSingularField(gf *protogen.GeneratedFile, fieldDesc protore
 
 	switch fieldDesc.Kind() {
 	case protoreflect.BoolKind:
-		// hasher.Write(protowire.AppendVarint(nil, protowire.EncodeBool(...)))
-		gf.P(writeFn, appendVarintFn, "(nil, ", encodeBoolFn, "(", fieldName, ")))")
+		// hasher.Write(protowire.AppendVarint(b[:0], protowire.EncodeBool(...)))
+		gf.P(writeFn, appendVarintFn, "(b[:0], ", encodeBoolFn, "(", fieldName, ")))")
 	case protoreflect.EnumKind:
-		// hasher.Write(protowire.AppendVarint(nil, uint64(...)))
-		gf.P(writeFn, appendVarintFn, "(nil, uint64(", fieldName, ")))")
+		// hasher.Write(protowire.AppendVarint(b[:0], uint64(...)))
+		gf.P(writeFn, appendVarintFn, "(b[:0], uint64(", fieldName, ")))")
 	case protoreflect.Int32Kind:
-		// hasher.Write(protowire.AppendVarint(nil, uint64(...)))
-		gf.P(writeFn, appendVarintFn, "(nil, uint64(", fieldName, ")))")
+		// hasher.Write(protowire.AppendVarint(b[:0], uint64(...)))
+		gf.P(writeFn, appendVarintFn, "(b[:0], uint64(", fieldName, ")))")
 	case protoreflect.Sint32Kind:
-		// hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(int64(...))))
-		gf.P(writeFn, appendVarintFn, "(nil, ", encodeZigZagFn, "(int64(", fieldName, "))))")
+		// hasher.Write(protowire.AppendVarint(b[:0], protowire.EncodeZigZag(int64(...))))
+		gf.P(writeFn, appendVarintFn, "(b[:0], ", encodeZigZagFn, "(int64(", fieldName, "))))")
 	case protoreflect.Uint32Kind:
-		// hasher.Write(protowire.AppendVarint(nil, uint64(...)))
-		gf.P(writeFn, appendVarintFn, "(nil, uint64(", fieldName, ")))")
+		// hasher.Write(protowire.AppendVarint(b[:0], uint64(...)))
+		gf.P(writeFn, appendVarintFn, "(b[:0], uint64(", fieldName, ")))")
 	case protoreflect.Int64Kind:
-		// hasher.Write(protowire.AppendVarint(nil, uint64(...)))
-		gf.P(writeFn, appendVarintFn, "(nil, uint64(", fieldName, ")))")
+		// hasher.Write(protowire.AppendVarint(b[:0], uint64(...)))
+		gf.P(writeFn, appendVarintFn, "(b[:0], uint64(", fieldName, ")))")
 	case protoreflect.Sint64Kind:
-		// hasher.Write(protowire.AppendVarint(nil, protowire.EncodeZigZag(...)))
-		gf.P(writeFn, appendVarintFn, "(nil, ", encodeZigZagFn, "(", fieldName, ")))")
+		// hasher.Write(protowire.AppendVarint(b[:0], protowire.EncodeZigZag(...)))
+		gf.P(writeFn, appendVarintFn, "(b[:0], ", encodeZigZagFn, "(", fieldName, ")))")
 	case protoreflect.Uint64Kind:
-		// hasher.Write(protowire.AppendVarint(nil, ...))
-		gf.P(writeFn, appendVarintFn, "(nil, ", fieldName, "))")
+		// hasher.Write(protowire.AppendVarint(b[:0], ...))
+		gf.P(writeFn, appendVarintFn, "(b[:0], ", fieldName, "))")
 	case protoreflect.Sfixed32Kind:
-		// hasher.Write(protowire.AppendFixed32(nil, uint32(...)))
-		gf.P(writeFn, appendFixed32Fn, "(nil, uint32(", fieldName, ")))")
+		// hasher.Write(protowire.AppendFixed32(b[:0], uint32(...)))
+		gf.P(writeFn, appendFixed32Fn, "(b[:0], uint32(", fieldName, ")))")
 	case protoreflect.Fixed32Kind:
-		// hasher.Write(protowire.AppendFixed32(nil, uint32(...)))
-		gf.P(writeFn, appendFixed32Fn, "(nil, uint32(", fieldName, ")))")
+		// hasher.Write(protowire.AppendFixed32(b[:0], uint32(...)))
+		gf.P(writeFn, appendFixed32Fn, "(b[:0], uint32(", fieldName, ")))")
 	case protoreflect.FloatKind:
-		// hasher.Write(protowire.AppendFixed32(nil, math.Float32bits(...)))
-		gf.P(writeFn, appendFixed32Fn, "(nil,", float32BitsFn, "(", fieldName, ")))")
+		// hasher.Write(protowire.AppendFixed32(b[:0], math.Float32bits(...)))
+		gf.P(writeFn, appendFixed32Fn, "(b[:0], ", float32BitsFn, "(", fieldName, ")))")
 	case protoreflect.Sfixed64Kind:
-		// hasher.Write(protowire.AppendFixed64(nil, uint64(...)))
-		gf.P(writeFn, appendFixed64Fn, "(nil, uint64(", fieldName, ")))")
+		// hasher.Write(protowire.AppendFixed64(b[:0], uint64(...)))
+		gf.P(writeFn, appendFixed64Fn, "(b[:0], uint64(", fieldName, ")))")
 	case protoreflect.Fixed64Kind:
-		// hasher.Write(protowire.AppendFixed64(nil, ...))
-		gf.P(writeFn, appendFixed64Fn, "(nil, ", fieldName, "))")
+		// hasher.Write(protowire.AppendFixed64(b[:0], ...))
+		gf.P(writeFn, appendFixed64Fn, "(b[:0], ", fieldName, "))")
 	case protoreflect.DoubleKind:
-		// hasher.Write(protowire.AppendFixed64(nil, math.Float64bits(...)))
-		gf.P(writeFn, appendFixed64Fn, "(nil,", float64BitsFn, "(", fieldName, ")))")
+		// hasher.Write(protowire.AppendFixed64(b[:0], math.Float64bits(...)))
+		gf.P(writeFn, appendFixed64Fn, "(b[:0], ", float64BitsFn, "(", fieldName, ")))")
 	case protoreflect.StringKind:
-		// hasher.Write(protowire.AppendVarint(nil, uint64(len(s))))
+		// hasher.Write(protowire.AppendVarint(b[:0], uint64(len(s))))
 		// hasher.Write(unsafe.Slice(unsafe.StringData(s), len(s)))
-		gf.P(writeFn, appendVarintFn, "(nil, uint64(len(", fieldName, "))))")
+		gf.P(writeFn, appendVarintFn, "(b[:0], uint64(len(", fieldName, "))))")
 		gf.P(writeFn, unsafeSliceFn, "(", unsafeStringDataFn, "(", fieldName, "), len(", fieldName, "))", ")")
 	case protoreflect.BytesKind:
-		// hasher.Write(protowire.AppendVarint(nil, uint64(len(b))))
+		// hasher.Write(protowire.AppendVarint(b[:0], uint64(len(b))))
 		// hasher.Write(b)
-		gf.P(writeFn, appendVarintFn, "(nil, uint64(len(", fieldName, "))))")
+		gf.P(writeFn, appendVarintFn, "(b[:0], uint64(len(", fieldName, "))))")
 		gf.P(writeFn, fieldName, ")")
 	case protoreflect.MessageKind:
 		gf.P("if ", fieldName, " != nil {")
-		gf.P(sumFuncName(fieldDesc.Message()), "(", fieldName, ",hasher, ignore)")
+		gf.P(sumFuncName(fieldDesc.Message()), "(", fieldName, ", hasher, ignore, b)")
 		gf.P("}")
 	default:
 		panic(fmt.Errorf("unhandled field kind %s", fieldDesc.Kind().String()))
@@ -351,7 +351,8 @@ func (g *codegen) genMethodForMsg(gf *protogen.GeneratedFile, genFuncs map[strin
 	gf.P("// The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash")
 	gf.P("func (", receiverIdent, " *", msg.GoIdent, ") HashPB(hasher ", hashFn, ", ignore map[string]struct{}) {")
 	gf.P("if ", receiverIdent, " != nil {")
-	gf.P(sumFuncName(msg.Desc), "(", receiverIdent, ", hasher, ignore)")
+	gf.P("var b [10]byte")
+	gf.P(sumFuncName(msg.Desc), "(", receiverIdent, ", hasher, ignore, &b)")
 	gf.P("}")
 	gf.P("}")
 	gf.P()
