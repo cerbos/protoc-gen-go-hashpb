@@ -7,7 +7,6 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"hash"
-	"math/rand"
 	"testing"
 	"time"
 
@@ -18,8 +17,6 @@ import (
 	"google.golang.org/protobuf/types/known/timestamppb"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 )
-
-var sink byte
 
 type Hashable interface {
 	HashPB(hash.Hash, map[string]struct{})
@@ -284,15 +281,40 @@ func BenchmarkHashPB(b *testing.B) {
 			buf := make([]byte, 8)
 			m := mkNestedTestAllTypesMsg(n)
 			size := proto.Size(m)
+			digest := xxhash.New()
 			b.SetBytes(int64(size))
 			b.ReportAllocs()
-			b.ResetTimer()
 
-			for i := 0; i < b.N; i++ {
-				digest := xxhash.New()
+			for b.Loop() {
+				digest.Reset()
 				m.HashPB(digest, nil)
-				sum := digest.Sum(buf)
-				sink = sum[rand.Intn(8)]
+				_ = digest.Sum(buf)
+			}
+		})
+	}
+}
+
+func BenchmarkHashPBBatch(b *testing.B) {
+	const batchSize = 500
+	for _, n := range []int{1, 5, 10} {
+		b.Run(fmt.Sprintf("nesting=%d", n), func(b *testing.B) {
+			msgs := make([]*pb.NestedTestAllTypes, batchSize)
+			var totalSize int64
+			for i := range msgs {
+				msgs[i] = mkNestedTestAllTypesMsg(n)
+				totalSize += int64(proto.Size(msgs[i]))
+			}
+			buf := make([]byte, 8)
+			digest := xxhash.New()
+			b.SetBytes(totalSize)
+			b.ReportAllocs()
+
+			for b.Loop() {
+				digest.Reset()
+				for _, m := range msgs {
+					m.HashPB(digest, nil)
+				}
+				_ = digest.Sum(buf)
 			}
 		})
 	}

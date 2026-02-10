@@ -23,9 +23,12 @@ const (
 	protowireImp  = protogen.GoImportPath("google.golang.org/protobuf/encoding/protowire")
 	mapsImp       = protogen.GoImportPath("maps")
 	slicesImp     = protogen.GoImportPath("slices")
+	syncImp       = protogen.GoImportPath("sync")
 	unsafeImp     = protogen.GoImportPath("unsafe")
 	receiverIdent = "m"
 )
+
+const mapKeyPoolCap = 32
 
 var (
 	Version = "dev"
@@ -39,7 +42,9 @@ var (
 	float64BitsFn   = mathImp.Ident("Float64bits")
 	hashFn          = hasherImp.Ident("Hash")
 	mapKeysFn       = mapsImp.Ident("Keys")
+	slicesSortFn    = slicesImp.Ident("Sort")
 	sortedFn        = slicesImp.Ident("Sorted")
+	syncPoolFn      = syncImp.Ident("Pool")
 
 	unsafeSliceFn      = unsafeImp.Ident("Slice")
 	unsafeStringDataFn = unsafeImp.Ident("StringData")
@@ -109,6 +114,34 @@ func (g *codegen) generateHelpers(files []*protogen.File) {
 
 	fileName := filepath.Join(filepath.Dir(files[0].GeneratedFilenamePrefix), "hashpb_helpers.pb.go")
 	gf := g.newGeneratedFile(fileName, files, nil)
+
+	// generate the buffer pool
+	gf.P("var hashpb_bufPool = ", syncPoolFn, "{")
+	gf.P("New: func() any { return new([10]byte) },")
+	gf.P("}")
+	gf.P()
+
+	// generate map key pools
+	gf.P("var hashpb_stringKeyPool = ", syncPoolFn, "{")
+	gf.P("New: func() any { return make([]string, 0, ", mapKeyPoolCap, ") },")
+	gf.P("}")
+	gf.P()
+	gf.P("var hashpb_int32KeyPool = ", syncPoolFn, "{")
+	gf.P("New: func() any { return make([]int32, 0, ", mapKeyPoolCap, ") },")
+	gf.P("}")
+	gf.P()
+	gf.P("var hashpb_int64KeyPool = ", syncPoolFn, "{")
+	gf.P("New: func() any { return make([]int64, 0, ", mapKeyPoolCap, ") },")
+	gf.P("}")
+	gf.P()
+	gf.P("var hashpb_uint32KeyPool = ", syncPoolFn, "{")
+	gf.P("New: func() any { return make([]uint32, 0, ", mapKeyPoolCap, ") },")
+	gf.P("}")
+	gf.P()
+	gf.P("var hashpb_uint64KeyPool = ", syncPoolFn, "{")
+	gf.P("New: func() any { return make([]uint64, 0, ", mapKeyPoolCap, ") },")
+	gf.P("}")
+	gf.P()
 
 	// sort message names to make the generated file predictable (no spurious diffs)
 	msgNames := make([]string, len(msgsToGen))
@@ -229,12 +262,45 @@ func (g *codegen) genMapField(gf *protogen.GeneratedFile, field *protogen.Field)
 			gf.P("}")
 		}
 	} else {
+		poolName, goKeyType := mapKeyPoolInfo(field.Desc.MapKey().Kind())
 		gf.P("if len(", fieldName, ") > 0 {")
+		gf.P("if len(", fieldName, ") <= ", mapKeyPoolCap, " {")
+		// Use pooled slice
+		gf.P("keys := ", poolName, ".Get().([]", goKeyType, ")[:0]")
+		gf.P("for k := range ", fieldName, " {")
+		gf.P("keys = append(keys, k)")
+		gf.P("}")
+		gf.P(slicesSortFn, "(keys)")
+		gf.P("for _, k := range keys {")
+		g.genSingularField(gf, field.Desc.MapKey(), "k")
+		g.genSingularField(gf, field.Desc.MapValue(), fmt.Sprintf("%s[k]", fieldName))
+		gf.P("}")
+		gf.P(poolName, ".Put(keys)")
+		gf.P("} else {")
+		// Fall back to allocating
 		gf.P("for _, k := range ", sortedFn, "(", mapKeysFn, "(", fieldName, ")) {")
 		g.genSingularField(gf, field.Desc.MapKey(), "k")
 		g.genSingularField(gf, field.Desc.MapValue(), fmt.Sprintf("%s[k]", fieldName))
 		gf.P("}")
 		gf.P("}")
+		gf.P("}")
+	}
+}
+
+func mapKeyPoolInfo(kind protoreflect.Kind) (poolName, goType string) {
+	switch kind {
+	case protoreflect.StringKind:
+		return "hashpb_stringKeyPool", "string"
+	case protoreflect.Int32Kind, protoreflect.Sint32Kind, protoreflect.Sfixed32Kind:
+		return "hashpb_int32KeyPool", "int32"
+	case protoreflect.Int64Kind, protoreflect.Sint64Kind, protoreflect.Sfixed64Kind:
+		return "hashpb_int64KeyPool", "int64"
+	case protoreflect.Uint32Kind, protoreflect.Fixed32Kind:
+		return "hashpb_uint32KeyPool", "uint32"
+	case protoreflect.Uint64Kind, protoreflect.Fixed64Kind:
+		return "hashpb_uint64KeyPool", "uint64"
+	default:
+		panic(fmt.Errorf("unsupported map key kind: %s", kind))
 	}
 }
 
@@ -351,8 +417,9 @@ func (g *codegen) genMethodForMsg(gf *protogen.GeneratedFile, genFuncs map[strin
 	gf.P("// The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash")
 	gf.P("func (", receiverIdent, " *", msg.GoIdent, ") HashPB(hasher ", hashFn, ", ignore map[string]struct{}) {")
 	gf.P("if ", receiverIdent, " != nil {")
-	gf.P("var b [10]byte")
-	gf.P(sumFuncName(msg.Desc), "(", receiverIdent, ", hasher, ignore, &b)")
+	gf.P("b := hashpb_bufPool.Get().(*[10]byte)")
+	gf.P(sumFuncName(msg.Desc), "(", receiverIdent, ", hasher, ignore, b)")
+	gf.P("hashpb_bufPool.Put(b)")
 	gf.P("}")
 	gf.P("}")
 	gf.P()
