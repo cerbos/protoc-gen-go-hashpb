@@ -12,8 +12,9 @@ import (
 // The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash
 func (m *TestAllTypes) HashPB(hasher hash.Hash, ignore map[string]struct{}) {
 	if m != nil {
-		var b [10]byte
-		cerbos_hashpb_test_TestAllTypes_hashpb_sum(m, hasher, ignore, &b)
+		b := hashpb_bufPool.Get().(*[10]byte)
+		cerbos_hashpb_test_TestAllTypes_hashpb_sum(m, hasher, ignore, b)
+		hashpb_bufPool.Put(b)
 	}
 }
 
@@ -21,8 +22,9 @@ func (m *TestAllTypes) HashPB(hasher hash.Hash, ignore map[string]struct{}) {
 // The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash
 func (m *TestAllTypes_NestedMessage) HashPB(hasher hash.Hash, ignore map[string]struct{}) {
 	if m != nil {
-		var b [10]byte
-		cerbos_hashpb_test_TestAllTypes_NestedMessage_hashpb_sum(m, hasher, ignore, &b)
+		b := hashpb_bufPool.Get().(*[10]byte)
+		cerbos_hashpb_test_TestAllTypes_NestedMessage_hashpb_sum(m, hasher, ignore, b)
+		hashpb_bufPool.Put(b)
 	}
 }
 
@@ -30,8 +32,9 @@ func (m *TestAllTypes_NestedMessage) HashPB(hasher hash.Hash, ignore map[string]
 // The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash
 func (m *NestedTestAllTypes) HashPB(hasher hash.Hash, ignore map[string]struct{}) {
 	if m != nil {
-		var b [10]byte
-		cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m, hasher, ignore, &b)
+		b := hashpb_bufPool.Get().(*[10]byte)
+		cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m, hasher, ignore, b)
+		hashpb_bufPool.Put(b)
 	}
 }
 
@@ -39,8 +42,9 @@ func (m *NestedTestAllTypes) HashPB(hasher hash.Hash, ignore map[string]struct{}
 // The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash
 func (m *TestAllTypesOptional) HashPB(hasher hash.Hash, ignore map[string]struct{}) {
 	if m != nil {
-		var b [10]byte
-		cerbos_hashpb_test_TestAllTypesOptional_hashpb_sum(m, hasher, ignore, &b)
+		b := hashpb_bufPool.Get().(*[10]byte)
+		cerbos_hashpb_test_TestAllTypesOptional_hashpb_sum(m, hasher, ignore, b)
+		hashpb_bufPool.Put(b)
 	}
 }
 
@@ -48,7 +52,8 @@ func (m *TestAllTypesOptional) HashPB(hasher hash.Hash, ignore map[string]struct
 // The ignore set must contain fully-qualified field names (pkg.msg.field) that should be ignored from the hash
 func (m *TestAllTypesOptional_NestedMessage) HashPB(hasher hash.Hash, ignore map[string]struct{}) {
 	if m != nil {
-		var b [10]byte
-		cerbos_hashpb_test_TestAllTypesOptional_NestedMessage_hashpb_sum(m, hasher, ignore, &b)
+		b := hashpb_bufPool.Get().(*[10]byte)
+		cerbos_hashpb_test_TestAllTypesOptional_NestedMessage_hashpb_sum(m, hasher, ignore, b)
+		hashpb_bufPool.Put(b)
 	}
 }
