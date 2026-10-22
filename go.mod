@@ -1,8 +1,8 @@
 module github.com/cerbos/protoc-gen-go-hashpb
 
-go 1.24
+go 1.26.0
 
-toolchain go1.24.1
+toolchain go1.27.3
 
 require (
 	github.com/cespare/xxhash/v2 v2.3.0

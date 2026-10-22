@@ -23,23 +23,23 @@ var hashpb_bufPool = sync.Pool{
 }
 
 var hashpb_stringKeyPool = sync.Pool{
-	New: func() any { return make([]string, 0, 32) },
+	New: func() any { s := make([]string, 0, 32); return &s },
 }
 
 var hashpb_int32KeyPool = sync.Pool{
-	New: func() any { return make([]int32, 0, 32) },
+	New: func() any { s := make([]int32, 0, 32); return &s },
 }
 
 var hashpb_int64KeyPool = sync.Pool{
-	New: func() any { return make([]int64, 0, 32) },
+	New: func() any { s := make([]int64, 0, 32); return &s },
 }
 
 var hashpb_uint32KeyPool = sync.Pool{
-	New: func() any { return make([]uint32, 0, 32) },
+	New: func() any { s := make([]uint32, 0, 32); return &s },
 }
 
 var hashpb_uint64KeyPool = sync.Pool{
-	New: func() any { return make([]uint64, 0, 32) },
+	New: func() any { s := make([]uint64, 0, 32); return &s },
 }
 
 func cerbos_hashpb_test_NestedTestAllTypes_hashpb_sum(m *NestedTestAllTypes, hasher hash.Hash, ignore map[string]struct{}, b *[10]byte) {
@@ -412,7 +412,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_string_string"]; !ok {
 		if len(m.MapStringString) > 0 {
 			if len(m.MapStringString) <= 32 {
-				keys := hashpb_stringKeyPool.Get().([]string)[:0]
+				kp := hashpb_stringKeyPool.Get().(*[]string)
+				keys := (*kp)[:0]
 				for k := range m.MapStringString {
 					keys = append(keys, k)
 				}
@@ -423,7 +424,9 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(len(m.MapStringString[k]))))
 					_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.MapStringString[k]), len(m.MapStringString[k])))
 				}
-				hashpb_stringKeyPool.Put(keys)
+				clear(keys)
+				*kp = keys
+				hashpb_stringKeyPool.Put(kp)
 			} else {
 				for _, k := range slices.Sorted(maps.Keys(m.MapStringString)) {
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(len(k))))
@@ -437,7 +440,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_uint64_string"]; !ok {
 		if len(m.MapUint64String) > 0 {
 			if len(m.MapUint64String) <= 32 {
-				keys := hashpb_uint64KeyPool.Get().([]uint64)[:0]
+				kp := hashpb_uint64KeyPool.Get().(*[]uint64)
+				keys := (*kp)[:0]
 				for k := range m.MapUint64String {
 					keys = append(keys, k)
 				}
@@ -447,7 +451,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(len(m.MapUint64String[k]))))
 					_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.MapUint64String[k]), len(m.MapUint64String[k])))
 				}
-				hashpb_uint64KeyPool.Put(keys)
+				*kp = keys
+				hashpb_uint64KeyPool.Put(kp)
 			} else {
 				for _, k := range slices.Sorted(maps.Keys(m.MapUint64String)) {
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], k))
@@ -460,7 +465,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_int32_string"]; !ok {
 		if len(m.MapInt32String) > 0 {
 			if len(m.MapInt32String) <= 32 {
-				keys := hashpb_int32KeyPool.Get().([]int32)[:0]
+				kp := hashpb_int32KeyPool.Get().(*[]int32)
+				keys := (*kp)[:0]
 				for k := range m.MapInt32String {
 					keys = append(keys, k)
 				}
@@ -470,7 +476,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(len(m.MapInt32String[k]))))
 					_, _ = hasher.Write(unsafe.Slice(unsafe.StringData(m.MapInt32String[k]), len(m.MapInt32String[k])))
 				}
-				hashpb_int32KeyPool.Put(keys)
+				*kp = keys
+				hashpb_int32KeyPool.Put(kp)
 			} else {
 				for _, k := range slices.Sorted(maps.Keys(m.MapInt32String)) {
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(k)))
@@ -495,7 +502,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 	if _, ok := ignore["cerbos.hashpb.test.TestAllTypes.map_int64_nested_type"]; !ok {
 		if len(m.MapInt64NestedType) > 0 {
 			if len(m.MapInt64NestedType) <= 32 {
-				keys := hashpb_int64KeyPool.Get().([]int64)[:0]
+				kp := hashpb_int64KeyPool.Get().(*[]int64)
+				keys := (*kp)[:0]
 				for k := range m.MapInt64NestedType {
 					keys = append(keys, k)
 				}
@@ -506,7 +514,8 @@ func cerbos_hashpb_test_TestAllTypes_hashpb_sum(m *TestAllTypes, hasher hash.Has
 						cerbos_hashpb_test_TestAllTypes_NestedMessage_hashpb_sum(m.MapInt64NestedType[k], hasher, ignore, b)
 					}
 				}
-				hashpb_int64KeyPool.Put(keys)
+				*kp = keys
+				hashpb_int64KeyPool.Put(kp)
 			} else {
 				for _, k := range slices.Sorted(maps.Keys(m.MapInt64NestedType)) {
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(k)))
@@ -669,7 +678,8 @@ func google_protobuf_Struct_hashpb_sum(m *structpb.Struct, hasher hash.Hash, ign
 	if _, ok := ignore["google.protobuf.Struct.fields"]; !ok {
 		if len(m.Fields) > 0 {
 			if len(m.Fields) <= 32 {
-				keys := hashpb_stringKeyPool.Get().([]string)[:0]
+				kp := hashpb_stringKeyPool.Get().(*[]string)
+				keys := (*kp)[:0]
 				for k := range m.Fields {
 					keys = append(keys, k)
 				}
@@ -681,7 +691,9 @@ func google_protobuf_Struct_hashpb_sum(m *structpb.Struct, hasher hash.Hash, ign
 						google_protobuf_Value_hashpb_sum(m.Fields[k], hasher, ignore, b)
 					}
 				}
-				hashpb_stringKeyPool.Put(keys)
+				clear(keys)
+				*kp = keys
+				hashpb_stringKeyPool.Put(kp)
 			} else {
 				for _, k := range slices.Sorted(maps.Keys(m.Fields)) {
 					_, _ = hasher.Write(protowire.AppendVarint(b[:0], uint64(len(k))))
